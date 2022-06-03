@@ -1,0 +1,52 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 46px;
+    &__logo {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        &-text {
+            margin-left: 16px;
+        }
+        img {
+            width: 40px;
+            height: 40px;
+        }
+        h2 {
+            font-size: 20px;
+        }
+        p {
+            font-size: 14px;
+            color: #9D9D9D;
+        }
+    }
+    &__hamburger {
+        cursor: pointer;
+        div {
+            height: 4px;
+            width: 34px;
+            background: #9B9B9B;
+            margin-top: 8px;
+            border-radius: 2px;
+            &:first-of-type {
+                margin-top: 0;
+            }
+        }
+        &._notification {
+            position: relative;
+            &::after {
+                content: '';
+                position: absolute;
+                top: -5px;
+                border-radius: 100%;
+                background: $red;
+                width: 12px;
+                height: 12px;
+                right: -5px;
+            }
+        }
+    }
+}
