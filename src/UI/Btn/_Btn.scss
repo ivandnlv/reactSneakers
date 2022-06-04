@@ -1,0 +1,41 @@
+.btn {
+    cursor: pointer;
+    display: block;
+    border: none;
+    background: $main-color;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    text-align: center;
+    color: #fff;
+    padding: 18px;
+    border-radius: 18px;
+    width: 100%;
+    transition: 0.2s background ease-in-out;
+    &:hover {
+        background: lighten($main-color, 5%);
+    }
+    &:active {
+        background: darken($main-color, 5%);
+    }
+    &.go {
+        position: relative;
+        &:hover {
+            &::after {
+                transform: translateY(-50%) translateX(-20px);
+            }
+        }
+        &::after {
+            content: '';
+            position: absolute;
+            background: url('./arrow.svg') no-repeat center/cover;
+            width: 14px;
+            height: 14px;
+            right: 33px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: block;
+            transition: 0.2s transform ease-in-out;
+        }
+    }
+}

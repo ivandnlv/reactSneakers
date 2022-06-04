@@ -13,10 +13,15 @@ h1,h2,h3 {
 }
 
 body {
+    position: relative;
     background: $main-color;
     height: 100%;
 }
 
+@import './UI/Search/Search';
+@import './UI/Btn/Btn';
 @import "./components/App/App";
 @import './components/Header/Header';
 @import './components/Slider/Slider';
+@import './pages/Pages';
+@import './components/Cart/Cart';

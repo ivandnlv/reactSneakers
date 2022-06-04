@@ -24,8 +24,14 @@ const Slider = () => {
     return (
         <div className='slider'>
             <div className="slider__btns">
-                <img src={next} alt="next" className='next' onClick={onNextClick}/>
-                <img src={next} alt="next" className='prev' onClick={onPrevClick}/>
+                {transform === 0 ? <img src={next} alt="next" className='next' onClick={onNextClick}/>
+                : transform === 200 ? <img src={next} alt="next" className='prev' onClick={onPrevClick}/>
+                :
+                <>
+                 <img src={next} alt="next" className='next' onClick={onNextClick}/> 
+                 <img src={next} alt="next" className='prev' onClick={onPrevClick}/>
+                </>
+                }
             </div>
 
             <div className="slider__wrapper" >
