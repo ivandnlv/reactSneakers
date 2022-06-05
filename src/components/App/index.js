@@ -11,6 +11,7 @@ function App() {
   const [cartSneakers, setCartSneakers] = useState([]);
   const [isCartOpened, setIsCartOpened] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [sum, setSum] = useState(0);
 
   useEffect(() => {
       setLoading(true);
@@ -23,6 +24,9 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem('cartSneakers', JSON.stringify(cartSneakers));
+    let sum = 0;
+    cartSneakers.forEach(item => item.salePrice ? sum += item.salePrice : sum += item.price);
+    setSum(sum);
   },[cartSneakers])
 
   const openCart = () => {
@@ -49,12 +53,19 @@ function App() {
     return cartSneakers.find(item => item.img === img);
   }
 
+  const priceMoreThan10 = (price) => {
+    if (price > 10000) {
+        let str = `${price}`;
+        return `${str.slice(0,2)} ${str.slice(2)}`;
+    } else return price;
+}
+
 
   return (
     <div className="wrapper">
-      <AppContext.Provider value={{sneakers, cartSneakers, sneakerToCart, deleteFromCart, isAlreadyInCart}}>
-        <Header openCart={openCart}/>
-        {isCartOpened ? <Cart closeCart={closeCart}/> : null}
+      <AppContext.Provider value={{sneakers, cartSneakers, sneakerToCart, deleteFromCart, isAlreadyInCart, priceMoreThan10}}>
+        <Header openCart={openCart} sum={sum}/>
+        {isCartOpened ? <Cart closeCart={closeCart} sum={sum}/> : null}
         <hr />
         <div className="content">
           <Slider /> 

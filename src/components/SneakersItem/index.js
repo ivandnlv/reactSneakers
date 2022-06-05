@@ -5,11 +5,13 @@ import unfavoritedIcon from './unfavorited.svg';
 import favoritedIcon from './favorited.svg';
 import AppContext from '../Context';
 
-const SneakersItem = ({id, img, price, title}) => {
+const SneakersItem = ({id, img, price, title, sale}) => {
     const [inCart, setInCart] = useState(false);
     const [isFavorited, setIsFavorited] = useState(false);
-    const {sneakerToCart, isAlreadyInCart} = useContext(AppContext);
-    const obj = {id, img, price, title};
+    const {sneakerToCart, isAlreadyInCart, priceMoreThan10} = useContext(AppContext);
+    const salePrice = Math.floor(price * sale);
+    const obj = sale ? {id, img, salePrice, title, price} : {id, img, price, title};
+
 
     const onClickPlus = () => {
         sneakerToCart(obj);
@@ -27,8 +29,12 @@ const SneakersItem = ({id, img, price, title}) => {
             </button>
             <img src={img} alt={'sneaker' + id} className='sneakers__list-item-img'/>
             <p>{title}</p>
-            <span>Цена:</span>
-            <b>{price} руб.</b>
+            <span>
+                Цена: {sale ? <b className='sneakers__list-item-prev'> {price}</b> : null}
+            </span>
+            <b className={sale ? 'sneakers__list-item-sale' : null}>
+                {sale ? priceMoreThan10(salePrice) : priceMoreThan10(price)} руб.
+            </b>
             <button className='sneakers__list-item-tocart' onClick={onClickPlus}>
                     <img src={isAlreadyInCart(img) ? inCartIcon : toCartIcon} alt={inCart ? 'alreadyincart' : 'addtocart'} />
             </button>

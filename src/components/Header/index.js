@@ -1,7 +1,9 @@
-import React from 'react';
+import { useContext } from 'react';
+import AppContext from '../Context';
 import logo from './logo.png';
 
-const Header = ({openCart}) => {
+const Header = ({openCart, sum}) => {
+    const {priceMoreThan10} = useContext(AppContext);
     return (
         <header className='header'>
             <div className="header__logo">
@@ -17,7 +19,7 @@ const Header = ({openCart}) => {
                 <div className='header__nav-item'>Избранное</div>
             </nav>
             <div className="header__cart" onClick={openCart}>
-                <b>0 руб.</b>
+                <b>{priceMoreThan10(sum)} руб.</b>
                 <img src="./img/cart.svg" alt="cart" />
             </div>
         </header>

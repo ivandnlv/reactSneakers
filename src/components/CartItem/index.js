@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import AppContext from '../Context';
 import deleteIcon from './delete.svg';
 
-const CartItem = ({img, title, price, id}) => {
+const CartItem = ({img, title, price, id, salePrice}) => {
     const {deleteFromCart} = useContext(AppContext);
     const obj = {img, title, price, id};
 
@@ -16,7 +16,7 @@ const CartItem = ({img, title, price, id}) => {
             <div className="cart__item-content">
                 <p>{title}</p>
                 <div className="cart__item-content-price">
-                    <span><b>{price} руб.</b></span>
+                    <span><b>{salePrice ? salePrice : price} руб.</b></span>
                 </div>
             </div>
             <button className='cart__item-delete' onClick={onClickDelete}>

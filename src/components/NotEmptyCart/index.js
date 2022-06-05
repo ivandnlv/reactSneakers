@@ -3,8 +3,15 @@ import AppContext from '../Context';
 import Btn from '../../UI/Btn';
 import CartItem from '../CartItem';
 
-const NotEmptyCart = () => {
-    const {cartSneakers} = useContext(AppContext);
+const NotEmptyCart = ({sum}) => {
+    const {cartSneakers, priceMoreThan10} = useContext(AppContext);
+    let sale = 0;
+
+    cartSneakers.forEach(item => {
+        if (item.salePrice) {
+            sale += item.price - item.salePrice;
+        } 
+    });
 
     return (
         <>
@@ -15,7 +22,7 @@ const NotEmptyCart = () => {
                         key={item.id}
                         title={item.title}
                         img={item.img}
-                        price={item.price}
+                        price={item.salePrice ? item.salePrice : item.price}
                     />
                 )}
             </div>
@@ -25,15 +32,19 @@ const NotEmptyCart = () => {
                     <div></div>
                     <b>300 руб.</b>
                 </div>
-                <div className="cart__total-item sale">
-                    <span>Скидка</span>
-                    <div></div>
-                    <b>500 руб.</b>
-                </div>
+                {sale !== 0 ? 
+                    <div className="cart__total-item sale">
+                        <span>Скидка</span>
+                        <div></div>
+                        <b>{sale} руб.</b>
+                    </div>
+                : null
+                }
+                
                 <div className="cart__total-item">
                     <span>Итого</span>
                     <div></div>
-                    <b>10300 руб.</b>
+                    <b>{priceMoreThan10(sum + 300)} руб.</b>
                 </div>
                 <Btn type='go'>Оформить заказ</Btn>
             </div>

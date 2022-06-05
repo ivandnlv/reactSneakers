@@ -26,6 +26,7 @@ const Main = ({loading}) => {
                                 title={item.title}
                                 price={item.price}
                                 img={item.img}
+                                sale={item.sale}
                                 isAlreadyInCart={isAlreadyInCart(item.img) ? true : false}
                             />
                         )

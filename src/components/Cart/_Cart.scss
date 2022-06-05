@@ -1,11 +1,16 @@
 .overlay {
     top: 0;
     left: 0;
+    overflow: hidden;
     position: fixed;
     z-index: 100;
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, .5);
+    animation: overlayShow 0.2s ease-in-out;
+    &.hide {
+        animation: overlayHide 0.2s ease-in-out;
+    }
     .cart {
         position: fixed;
         z-index: 101;
@@ -17,6 +22,10 @@
         border-radius: 30px 0 0 30px;
         display: flex;
         flex-direction: column;
+        animation: cartShow 0.5s ease-in-out;
+        &.hide {
+            animation: cartHide 0.2s ease-in-out;
+        }
         &__top {
             display: flex;
             justify-content: space-between;
@@ -43,7 +52,6 @@
                 }
             }
         }
-        
         &__items {
             max-height: 660px;
             overflow: auto;
@@ -78,5 +86,37 @@
                 }
             }
         }
+    }
+}
+
+@keyframes overlayShow {
+    from {
+        opacity: 0;
+    } to {
+        opacity: 1;
+    }
+}
+
+@keyframes cartShow {
+    from {
+        transform: translateX(1000px);
+    } to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes overlayHide {
+    from {
+        opacity: 1;
+    } to {
+        opacity: 0;
+    }
+}
+
+@keyframes cartHide {
+    from {
+        transform: translateX(0);
+    } to {
+        transform: translateX(1000px);
     }
 }

@@ -1,12 +1,10 @@
 import React, { useContext } from 'react';
-import Btn from '../../UI/Btn';
-import CartItem from '../CartItem';
 import AppContext from '../Context';
 import EmptyCart from '../EmptyCart';
 import NotEmptyCart from '../NotEmptyCart';
 import closeIcon from './close.svg';
 
-const Cart = ({closeCart}) => {
+const Cart = ({closeCart, sum}) => {
     const {cartSneakers} = useContext(AppContext);
 
     return (
@@ -22,7 +20,7 @@ const Cart = ({closeCart}) => {
                     cartSneakers.length === 0 ?
                     <EmptyCart closeCart={closeCart}/>
                     :
-                    <NotEmptyCart />
+                    <NotEmptyCart sum={sum}/>
                 }
             </div>
         </div>
