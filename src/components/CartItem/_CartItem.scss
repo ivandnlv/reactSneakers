@@ -1,0 +1,38 @@
+.cart__item {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #F3F3F3;
+    border-radius: 20px;
+    padding: 20px 20px 30px 20px;
+    margin-bottom: 20px;
+    &-image {
+        width: 100px;
+        height: 70px;
+        object-fit: cover;
+    }
+    &-content {
+        font-size: 14px;
+        margin-left: 10px;
+        &-price {
+            margin-top: 10px;
+        }
+    }
+    &-delete {
+        margin-left: 10px;
+        display: block;
+        border: none;
+        background: none;
+        cursor: pointer; 
+        width: 32px;
+        height: 32px;
+        transition: 0.2s opacity ease-in-out;
+        &:hover {
+            opacity: 0.9;
+        }
+        img {
+            height: 100%;
+        }
+    }
+}

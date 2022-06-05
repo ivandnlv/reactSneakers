@@ -18,24 +18,39 @@
     &:active {
         background: darken($main-color, 5%);
     }
-    &.go {
+    &.go, &.back {
         position: relative;
-        &:hover {
-            &::after {
-                transform: translateY(-50%) translateX(-20px);
-            }
-        }
         &::after {
             content: '';
             position: absolute;
             background: url('./arrow.svg') no-repeat center/cover;
             width: 14px;
             height: 14px;
-            right: 33px;
             top: 50%;
-            transform: translateY(-50%);
             display: block;
             transition: 0.2s transform ease-in-out;
+        }
+    }
+    &.go {
+        &::after {
+            right: 33px;
+            transform: translateY(-50%);
+        }
+        &:hover {
+            &::after {
+                transform: translateY(-50%) translateX(-20px);
+            }
+        }
+    }
+    &.back {
+        &::after {
+            left: 26px;
+            transform: translateY(-50%) scale(-1, 1);
+        }
+        &:hover {
+            &::after {
+                transform: translateY(-50%) translateX(-10px) scale(-1, 1);
+            }
         }
     }
 }

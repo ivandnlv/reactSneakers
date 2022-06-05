@@ -45,6 +45,8 @@
         }
         
         &__items {
+            max-height: 660px;
+            overflow: auto;
             margin-top: 30px;
             flex: 1;
         }

@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Btn from '../../UI/Btn';
-import SneakersItem from '../SneakersItem';
+import CartItem from '../CartItem';
+import AppContext from '../Context';
+import EmptyCart from '../EmptyCart';
+import NotEmptyCart from '../NotEmptyCart';
 import closeIcon from './close.svg';
 
 const Cart = ({closeCart}) => {
+    const {cartSneakers} = useContext(AppContext);
+
     return (
         <div className='overlay'>
             <div className="cart">
@@ -13,32 +18,12 @@ const Cart = ({closeCart}) => {
                         <img src={closeIcon} alt="closeIcon" />
                     </button>
                 </div>
-                <div className="cart__items">
-                    <SneakersItem 
-                        id={1}
-                        title={'nike air force цвета капусты'}
-                        img={'./img/sneakers/9.jpg'}
-                        price={12000}
-                    />
-                </div>
-                <div className="cart__total">
-                    <div className="cart__total-item">
-                        <span>Доставка</span>
-                        <div></div>
-                        <b>300 руб.</b>
-                    </div>
-                    <div className="cart__total-item sale">
-                        <span>Скидка</span>
-                        <div></div>
-                        <b>500 руб.</b>
-                    </div>
-                    <div className="cart__total-item">
-                        <span>Итого</span>
-                        <div></div>
-                        <b>10300 руб.</b>
-                    </div>
-                    <Btn type='go'>Оформить заказ</Btn>
-                </div>
+                {
+                    cartSneakers.length === 0 ?
+                    <EmptyCart closeCart={closeCart}/>
+                    :
+                    <NotEmptyCart />
+                }
             </div>
         </div>
     );
