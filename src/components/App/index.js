@@ -13,11 +13,12 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [sum, setSum] = useState(0);
   const [sneakersFilters, setSneakersFilters] = useState({});
+  const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
       setLoading(true);
       const localCartSneakers = JSON.parse(localStorage.getItem('cartSneakers'));
-      setCartSneakers([...localCartSneakers]);
+      localCartSneakers && setCartSneakers([...localCartSneakers]);
       GetSneakers()
         .then(res => setSneakers(res))
         .finally(() => setLoading(false));
@@ -59,18 +60,32 @@ function App() {
         let str = `${price}`;
         return `${str.slice(0,2)} ${str.slice(2)}`;
     } else return price;
-}
+  }
 
+  const onSearchInputChange = (e) => {
+    setSearchValue(e.target.value);
+  }
 
   return (
     <div className="wrapper">
-      <AppContext.Provider value={{sneakers, cartSneakers, sneakerToCart, deleteFromCart, isAlreadyInCart, priceMoreThan10, sneakersFilters, setSneakersFilters}}>
+      <AppContext.Provider value={{
+          sneakers, 
+          cartSneakers, 
+          sneakerToCart, 
+          deleteFromCart, 
+          isAlreadyInCart, 
+          priceMoreThan10, 
+          sneakersFilters, 
+          setSneakersFilters,
+          searchValue
+        }}>
         <Header openCart={openCart} sum={sum}/>
         {isCartOpened ? <Cart closeCart={closeCart} sum={sum}/> : null}
         <hr />
         <div className="content">
           <Slider /> 
           <Main 
+            onSearchInputChange={onSearchInputChange}
             sneakers={sneakers} 
             loading={loading}
           />

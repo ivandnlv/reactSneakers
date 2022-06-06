@@ -5,13 +5,8 @@ import SneakersSkeleton from '../components/SneakersSkeleton';
 import AppContext from '../components/Context';
 import Filters from '../components/Filters';
 
-const Main = ({loading}) => {
-    const {sneakers, isAlreadyInCart, sneakersFilters} = useContext(AppContext);
-
-    // let brands = '';
-    // console.log(brands);
-    // sneakersFilters.brands && sneakersFilters.brands.forEach(item => brands += item);
-    // const filtredSneakers = sneakers.filter((item, i) => item.title.includes(brands));
+const Main = ({loading, onSearchInputChange}) => {
+    const {sneakers, isAlreadyInCart, sneakersFilters, searchValue} = useContext(AppContext);
 
     const sneakersFilter = () => {
         const {brands, onlySale, sort} = sneakersFilters;
@@ -35,7 +30,9 @@ const Main = ({loading}) => {
             } else if (brands.length === 0 && !onlySale && sort === 'ascending') {
                 const newArr = sneakers.filter(item => item);
                 return newArr.sort((a,b) => a.price > b.price ? 1 : -1);
-
+            } else if (brands.length === 0 && onlySale && sort === 'ascending') {
+                const newArr = sneakers.filter(item => item.sale);
+                return newArr.sort((a,b) => a.price > b.price ? 1 : -1);
             } else if (brands.length !== 0 && !onlySale && sort === 'descending') {
                 const newArr = sneakers.filter(item => item.title.includes(...brands));
                 return newArr.sort((a,b) => a.price > b.price ? -1 : 1);
@@ -47,6 +44,9 @@ const Main = ({loading}) => {
             } else if (brands.length === 0 && !onlySale && sort === 'descending') {
                 const newArr = sneakers.filter(item => item);
                 return newArr.sort((a,b) => a.price > b.price ? -1 : 1);
+            } else if (brands.length === 0 && onlySale && sort === 'descending') {
+                const newArr = sneakers.filter(item => item.sale);
+                return newArr.sort((a,b) => a.price > b.price ? -1 : 1);
             }
         } else return sneakers
     }
@@ -55,8 +55,8 @@ const Main = ({loading}) => {
         <>
             <div className='sneakers'>
                 <div className="sneakers__top">
-                    <h1>Все кроссовки</h1>
-                    <Search/>
+                    {searchValue ? <h1>Поиск по запросу: {searchValue}</h1> : <h1>Все кроссовки</h1>}
+                    <Search onSearchInputChange={onSearchInputChange}/>
                 </div>
                 <div className="sneakers__wrapper">
                     <div className="sneakers__list">   
@@ -64,7 +64,9 @@ const Main = ({loading}) => {
                             [...Array(10)].map((item, index) => 
                                 <SneakersSkeleton key={index}/>
                         ) :
-                            sneakersFilter().map(item => 
+                            sneakersFilter()
+                            .filter(item => item.title.toLowerCase().includes(searchValue.toLowerCase()))
+                            .map(item => 
                                 <SneakersItem 
                                     key={item.id}
                                     id={item.id}
