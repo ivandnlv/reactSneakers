@@ -8,7 +8,7 @@ const EmptyCart = ({closeCart}) => {
             <img src={emptyBox} alt="empty" />
             <h2>Корзина пустая</h2>
             <p>Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ.</p>
-            <Btn type={'back'} onClick={closeCart}>Вернуться назад</Btn>
+            <Btn btnType={'back'} onClick={closeCart}>Вернуться назад</Btn>
         </div>
     );
 };

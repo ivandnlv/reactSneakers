@@ -12,6 +12,7 @@ function App() {
   const [isCartOpened, setIsCartOpened] = useState(false);
   const [loading, setLoading] = useState(false);
   const [sum, setSum] = useState(0);
+  const [sneakersFilters, setSneakersFilters] = useState({});
 
   useEffect(() => {
       setLoading(true);
@@ -63,7 +64,7 @@ function App() {
 
   return (
     <div className="wrapper">
-      <AppContext.Provider value={{sneakers, cartSneakers, sneakerToCart, deleteFromCart, isAlreadyInCart, priceMoreThan10}}>
+      <AppContext.Provider value={{sneakers, cartSneakers, sneakerToCart, deleteFromCart, isAlreadyInCart, priceMoreThan10, sneakersFilters, setSneakersFilters}}>
         <Header openCart={openCart} sum={sum}/>
         {isCartOpened ? <Cart closeCart={closeCart} sum={sum}/> : null}
         <hr />

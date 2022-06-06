@@ -46,7 +46,7 @@ const NotEmptyCart = ({sum}) => {
                     <div></div>
                     <b>{priceMoreThan10(sum + 300)} руб.</b>
                 </div>
-                <Btn type='go'>Оформить заказ</Btn>
+                <Btn btnType='go'>Оформить заказ</Btn>
             </div>
         </>
     );

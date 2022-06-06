@@ -1,7 +1,7 @@
 import React from 'react';
 
-const Btn = ({children, onClick, type}) => {
-    const btnClass = type === 'go' ? 'btn' + ' ' + 'go' : type === 'back' ? 'btn' + ' ' + 'back' : type === 'default' ? 'btn' : null;
+const Btn = ({children, onClick, btnType, type}) => {
+    const btnClass = btnType === 'go' ? 'btn' + ' ' + 'go' : btnType === 'back' ? 'btn' + ' ' + 'back' : btnType === 'gray' ? 'btn' + ' ' + 'gray' : 'btn';
 
     return (
         <button

@@ -18,6 +18,10 @@
     &:active {
         background: darken($main-color, 5%);
     }
+    &.gray {
+        background: #F3F3F3;
+        color: #A1A1A1;
+    }
     &.go, &.back {
         position: relative;
         &::after {

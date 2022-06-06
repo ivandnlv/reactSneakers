@@ -1,12 +1,13 @@
 import {useState} from 'react';
 import next from './next.svg';
 import slide1 from './slide1.jpg';
+import slide2 from './slide2.jpg';
 
 const Slider = () => {
     const [transform, setTransform] = useState(0);
 
     const onNextClick = () => {
-        if (transform !== 200) {
+        if (transform !== 100) {
             setTransform(prev => prev + 100);
         } else {
             setTransform(0);
@@ -17,7 +18,7 @@ const Slider = () => {
         if (transform !== 0) {
             setTransform(prev => prev - 100);
         } else {
-            setTransform(200);
+            setTransform(100);
         }
     }
 
@@ -25,7 +26,7 @@ const Slider = () => {
         <div className='slider'>
             <div className="slider__btns">
                 {transform === 0 ? <img src={next} alt="next" className='next' onClick={onNextClick}/>
-                : transform === 200 ? <img src={next} alt="next" className='prev' onClick={onPrevClick}/>
+                : transform === 100 ? <img src={next} alt="next" className='prev' onClick={onPrevClick}/>
                 :
                 <>
                  <img src={next} alt="next" className='next' onClick={onNextClick}/> 
@@ -40,10 +41,7 @@ const Slider = () => {
                         <img src={slide1} alt="slide1" />
                     </div>
                     <div className="slider__track-item">
-                        <img src={slide1} alt="slide2" />
-                    </div>
-                    <div className="slider__track-item">
-                        <img src={slide1} alt="slide2" />
+                        <img src={slide2} alt="slide2" />
                     </div>
                 </div>
             </div>
