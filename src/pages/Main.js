@@ -5,6 +5,7 @@ import SneakersSkeleton from '../components/SneakersSkeleton';
 import AppContext from '../components/Context';
 import Slider from '../components/Slider';
 import Filters from '../components/Filters';
+import Pagination from '../components/Pagination';
 
 const Main = ({loading, onSearchInputChange}) => {
     const {sneakers, isAlreadyInCart, sneakersFilters, searchValue} = useContext(AppContext);
@@ -58,6 +59,7 @@ const Main = ({loading, onSearchInputChange}) => {
             <div className='sneakers'>
                 <div className="sneakers__top">
                     {searchValue ? <h1>Поиск по запросу: {searchValue}</h1> : <h1>Все кроссовки</h1>}
+                    <Pagination /> 
                     <Search onSearchInputChange={onSearchInputChange}/>
                 </div>
                 <div className="sneakers__wrapper">
@@ -83,7 +85,9 @@ const Main = ({loading, onSearchInputChange}) => {
                     </div>
                     <Filters />
                 </div>
-                
+            <div className="sneakers__pagination">
+                <Pagination />  
+            </div>
             </div>
         </>
     );

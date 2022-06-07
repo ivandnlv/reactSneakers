@@ -1,0 +1,23 @@
+.pagination {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 32px);
+    column-gap: 5px;
+    grid-template-rows: 32px;
+    flex: 0.5;
+    &__item {
+        cursor: pointer;
+        background: #F2F2F2;
+        border: 1px solid #F2F2F2;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 19px;
+        text-align: center;
+        color: #D3D3D3;
+        padding: 6px 10px;
+        &.current {
+            color: #fff;
+            background: $main-color;
+        }
+    }
+}

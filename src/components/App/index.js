@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import Main from "../../pages/Main";
-import GetSneakers from "../../service/GetSneakers";
+import getSneakers from "../../service/getSneakers";
 import Header from "../Header";
 import AppContext from '../Context';
 import Cart from "../Cart";
 import { Routes, Route } from "react-router-dom";
 import Favorites from "../../pages/Favorites";
 import Orders from "../../pages/Orders";
+import axios from "axios";
 
 function App() {
   const [sneakers, setSneakers] = useState([]);
@@ -20,6 +21,15 @@ function App() {
   const [currentPage, setCurrentPage] = useState('main');
   const [orders, setOrders] = useState([]);
 
+  // Пагинация
+
+  const [sneakersShowCount, setSneakersShowCount] = useState(9);
+  const [currentPageNumber, setCurrentPageNumber] = useState(1);
+  const [sneakersLength, setSneakersLength] = useState(0);
+  const lastSneaker = sneakersShowCount * currentPageNumber;
+  const firstSneaker = lastSneaker - sneakersShowCount;
+  
+
   useEffect(() => {
       setLoading(true);
       const localCartSneakers = JSON.parse(localStorage.getItem('cartSneakers'));
@@ -28,7 +38,12 @@ function App() {
       localCartSneakers && setCartSneakers([...localCartSneakers]);
       localFavSneakers && setFavoriteSneakers([...localFavSneakers]);
       localOrders && setOrders([...localOrders]);
-      GetSneakers()
+      const getSneakersLength = async () => {
+        await axios.get('https://628f5df8dc478523653f3f73.mockapi.io/items')
+          .then(res => setSneakersLength(res.data.length));
+      }
+      getSneakersLength();
+      getSneakers(firstSneaker, lastSneaker)
         .then(res => setSneakers(res))
         .finally(() => setLoading(false));
   }, []);
@@ -47,6 +62,13 @@ function App() {
   useEffect(() => {
     localStorage.setItem('orders', JSON.stringify(orders));
   }, [orders])
+
+  useEffect(() => {
+    setLoading(true);
+    getSneakers(firstSneaker, lastSneaker)
+      .then(res => setSneakers(res))
+      .finally(() => setLoading(false));
+  }, [currentPageNumber]);
 
   const openCart = () => {
     setIsCartOpened(true);
@@ -119,7 +141,11 @@ function App() {
           orders,
           sneakersToOrders,
           setCartSneakers,
-          closeCart
+          closeCart,
+          sneakersLength,
+          sneakersShowCount,
+          setCurrentPageNumber,
+          currentPageNumber
         }}>
         <Header openCart={openCart} sum={sum}/>
         {isCartOpened ? <Cart closeCart={closeCart} sum={sum}/> : null}
