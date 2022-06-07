@@ -1,0 +1,31 @@
+.completeorder {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0 auto;
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    img {
+        width: 83px;
+        height: 120px;
+    }
+    h2 {
+        margin-top: 30px;
+        color: $main-color;
+        font-size: 22px;
+        line-height: 27px;
+    }
+    p {
+        margin-top: 10px;
+        font-size: 16px;
+        line-height: 24px;
+        color: #000000;
+        opacity: 0.4;
+    }
+    button {
+        margin-top: 40px;
+        width: 245px;
+    }
+}

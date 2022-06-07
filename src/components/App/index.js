@@ -2,23 +2,32 @@ import { useEffect, useState } from "react";
 import Main from "../../pages/Main";
 import GetSneakers from "../../service/GetSneakers";
 import Header from "../Header";
-import Slider from "../Slider";
 import AppContext from '../Context';
 import Cart from "../Cart";
+import { Routes, Route } from "react-router-dom";
+import Favorites from "../../pages/Favorites";
+import Orders from "../../pages/Orders";
 
 function App() {
   const [sneakers, setSneakers] = useState([]);
   const [cartSneakers, setCartSneakers] = useState([]);
+  const [favoriteSneakers, setFavoriteSneakers] = useState([]);
   const [isCartOpened, setIsCartOpened] = useState(false);
   const [loading, setLoading] = useState(false);
   const [sum, setSum] = useState(0);
   const [sneakersFilters, setSneakersFilters] = useState({});
   const [searchValue, setSearchValue] = useState('');
+  const [currentPage, setCurrentPage] = useState('main');
+  const [orders, setOrders] = useState([]);
 
   useEffect(() => {
       setLoading(true);
       const localCartSneakers = JSON.parse(localStorage.getItem('cartSneakers'));
+      const localFavSneakers = JSON.parse(localStorage.getItem('favoriteSneakers'));
+      const localOrders = JSON.parse(localStorage.getItem('orders'));
       localCartSneakers && setCartSneakers([...localCartSneakers]);
+      localFavSneakers && setFavoriteSneakers([...localFavSneakers]);
+      localOrders && setOrders([...localOrders]);
       GetSneakers()
         .then(res => setSneakers(res))
         .finally(() => setLoading(false));
@@ -29,7 +38,15 @@ function App() {
     let sum = 0;
     cartSneakers.forEach(item => item.salePrice ? sum += item.salePrice : sum += item.price);
     setSum(sum);
-  },[cartSneakers])
+  }, [cartSneakers]);
+
+  useEffect(() => {
+    localStorage.setItem('favoriteSneakers', JSON.stringify(favoriteSneakers));
+  }, [favoriteSneakers]);
+
+  useEffect(() => {
+    localStorage.setItem('orders', JSON.stringify(orders));
+  }, [orders])
 
   const openCart = () => {
     setIsCartOpened(true);
@@ -47,12 +64,28 @@ function App() {
     }
   }
 
+  const sneakerToFavorite = (obj) => {
+    if (favoriteSneakers.find(item => item.img === obj.img)) {
+      setFavoriteSneakers(prev => prev.filter(item => item.img !== obj.img));
+    } else {
+      setFavoriteSneakers(prev => [...prev, obj]);
+    }
+  }
+
+  const sneakersToOrders = (arr) => {
+    setOrders(prev => [...prev, ...arr]);
+  }
+
   const deleteFromCart = (obj) => {
     setCartSneakers(prev => prev.filter(item => item.img !== obj.img));
   }
 
   const isAlreadyInCart = (img) => {
     return cartSneakers.find(item => item.img === img);
+  }
+
+  const isAlreadyInFav = (img) => {
+    return favoriteSneakers.find(item => item.img === img);
   }
 
   const priceMoreThan10 = (price) => {
@@ -77,18 +110,39 @@ function App() {
           priceMoreThan10, 
           sneakersFilters, 
           setSneakersFilters,
-          searchValue
+          searchValue,
+          sneakerToFavorite,
+          isAlreadyInFav,
+          favoriteSneakers,
+          currentPage, 
+          setCurrentPage,
+          orders,
+          sneakersToOrders,
+          setCartSneakers,
+          closeCart
         }}>
         <Header openCart={openCart} sum={sum}/>
         {isCartOpened ? <Cart closeCart={closeCart} sum={sum}/> : null}
         <hr />
         <div className="content">
-          <Slider /> 
-          <Main 
-            onSearchInputChange={onSearchInputChange}
-            sneakers={sneakers} 
-            loading={loading}
-          />
+          <Routes>
+            <Route path="/" exact element={
+              <Main 
+                onSearchInputChange={onSearchInputChange}
+                sneakers={sneakers} 
+                loading={loading}
+              />
+            }>
+            </Route>
+            <Route path="/orders" exact element={
+              <Orders />
+            }>
+            </Route>
+            <Route path="/favorites" exact element={
+              <Favorites />
+            }>
+            </Route>
+          </Routes>
         </div>
       </AppContext.Provider>
     </div>

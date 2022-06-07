@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
-import AppContext from '../Context';
-import Btn from '../../UI/Btn';
-import CartItem from '../CartItem';
+import AppContext from './Context';
+import Btn from '../UI/Btn';
+import CartItem from './CartItem';
 
-const NotEmptyCart = ({sum}) => {
-    const {cartSneakers, priceMoreThan10} = useContext(AppContext);
+const NotEmptyCart = ({sum, setOrderComplete}) => {
+    const {cartSneakers, priceMoreThan10, sneakersToOrders, setCartSneakers} = useContext(AppContext);
     let sale = 0;
 
     cartSneakers.forEach(item => {
@@ -12,6 +12,12 @@ const NotEmptyCart = ({sum}) => {
             sale += item.price - item.salePrice;
         } 
     });
+
+    const onClickOrder = () => {
+        setOrderComplete(true);
+        sneakersToOrders(cartSneakers);
+        setCartSneakers([]);
+    }
 
     return (
         <>
@@ -46,7 +52,12 @@ const NotEmptyCart = ({sum}) => {
                     <div></div>
                     <b>{priceMoreThan10(sum + 300)} руб.</b>
                 </div>
-                <Btn btnType='go'>Оформить заказ</Btn>
+                <Btn 
+                    btnType='go'
+                    onClick={onClickOrder}
+                >
+                    Оформить заказ
+                </Btn>
             </div>
         </>
     );

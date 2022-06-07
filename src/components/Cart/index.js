@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
+import CompleteOrder from '../CompleteOrder';
 import AppContext from '../Context';
 import EmptyCart from '../EmptyCart';
 import NotEmptyCart from '../NotEmptyCart';
@@ -6,6 +7,7 @@ import closeIcon from './close.svg';
 
 const Cart = ({closeCart, sum}) => {
     const {cartSneakers} = useContext(AppContext);
+    const [orderComplete, setOrderComplete] = useState(false);
 
     return (
         <div className='overlay'>
@@ -17,10 +19,11 @@ const Cart = ({closeCart, sum}) => {
                     </button>
                 </div>
                 {
-                    cartSneakers.length === 0 ?
+                    cartSneakers.length === 0 && orderComplete === false ?
                     <EmptyCart closeCart={closeCart}/>
-                    :
-                    <NotEmptyCart sum={sum}/>
+                    : cartSneakers.length === 0 && orderComplete === true ?
+                    <CompleteOrder setOrderComplete={setOrderComplete}/>
+                    : <NotEmptyCart sum={sum} setOrderComplete={setOrderComplete}/>
                 }
             </div>
         </div>

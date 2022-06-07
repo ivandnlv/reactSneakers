@@ -11,6 +11,14 @@
         width: 100%;
         justify-content: space-between;
     }
+    &__orders-list {
+        margin-top: 40px;
+        display: grid;
+        width: 100%;
+        grid-template-columns: repeat(auto-fit, 210px);
+        grid-template-rows: repeat(auto-fit, 260px);
+        gap: 40px;
+    }
     &__list {
         margin-top: 40px;
         display: grid;
@@ -95,4 +103,13 @@
             }
         }
     }
+}
+
+.favorites {
+    display: grid;
+    margin-top: 40px;
+    max-width: 710px;
+    grid-template-columns: repeat(auto-fit, 210px);
+    grid-template-rows: repeat(auto-fit, 260px);
+    gap: 40px;
 }

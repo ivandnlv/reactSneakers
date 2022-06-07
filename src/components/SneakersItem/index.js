@@ -8,7 +8,7 @@ import AppContext from '../Context';
 const SneakersItem = ({id, img, price, title, sale}) => {
     const [inCart, setInCart] = useState(false);
     const [isFavorited, setIsFavorited] = useState(false);
-    const {sneakerToCart, isAlreadyInCart, priceMoreThan10} = useContext(AppContext);
+    const {sneakerToCart, isAlreadyInCart, priceMoreThan10, sneakerToFavorite, isAlreadyInFav} = useContext(AppContext);
     const salePrice = Math.floor(price * sale);
     const obj = sale ? {id, img, salePrice, title, price} : {id, img, price, title};
 
@@ -19,13 +19,14 @@ const SneakersItem = ({id, img, price, title, sale}) => {
     }
 
     const onClickHeart = () => {
+        sneakerToFavorite(obj);
         setIsFavorited(!isFavorited);
     }
 
     return (
         <div className='sneakers__list-item'>
             <button className='sneakers__list-item-favorite' onClick={onClickHeart}>
-                <img src={isFavorited ? favoritedIcon : unfavoritedIcon} alt={isFavorited ? 'favorited' : 'unfavorited'}/>
+                <img src={isAlreadyInFav(img) ? favoritedIcon : unfavoritedIcon} alt={isFavorited ? 'favorited' : 'unfavorited'}/>
             </button>
             <img src={img} alt={'sneaker' + id} className='sneakers__list-item-img'/>
             <p>{title}</p>

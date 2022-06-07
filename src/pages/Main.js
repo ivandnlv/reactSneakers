@@ -3,6 +3,7 @@ import SneakersItem from '../components/SneakersItem';
 import Search from '../UI/Search/Search';
 import SneakersSkeleton from '../components/SneakersSkeleton';
 import AppContext from '../components/Context';
+import Slider from '../components/Slider';
 import Filters from '../components/Filters';
 
 const Main = ({loading, onSearchInputChange}) => {
@@ -53,6 +54,7 @@ const Main = ({loading, onSearchInputChange}) => {
 
     return (
         <>
+            <Slider />
             <div className='sneakers'>
                 <div className="sneakers__top">
                     {searchValue ? <h1>Поиск по запросу: {searchValue}</h1> : <h1>Все кроссовки</h1>}
@@ -61,7 +63,7 @@ const Main = ({loading, onSearchInputChange}) => {
                 <div className="sneakers__wrapper">
                     <div className="sneakers__list">   
                         {loading ? 
-                            [...Array(10)].map((item, index) => 
+                            [...Array(6)].map((item, index) => 
                                 <SneakersSkeleton key={index}/>
                         ) :
                             sneakersFilter()
