@@ -3,7 +3,8 @@
 + React;
 + React Hooks (useState, useEffect, useContext);
 + React router V6;
-+ Axios.
++ Axios;
++ LocalStorage.
 
 Основа проекта была взята с youtube-курса по react (https://www.youtube.com/watch?v=ptiom4YWqoE&list=PL0FGkDGJQjJEos_0yVkbKjsQ9zGVy3dG7),
 просмотрев этот курс, я решил выполнить проект с нуля, добавив в него фильтрацию, пагинацию, скидки, также видоизменив макет.
