@@ -45,7 +45,7 @@ function App() {
     getSneakersLength();
     getSneakers(firstSneaker, lastSneaker)
       .then((res) => setSneakers(res))
-      .finally(() => setLoading(false));
+      .finally(() => setTimeout(() => setLoading(false), 1000));
   }, []);
 
   useEffect(() => {
@@ -69,7 +69,7 @@ function App() {
     setLoading(true);
     getSneakers(firstSneaker, lastSneaker)
       .then((res) => setSneakers(res))
-      .finally(() => setLoading(false));
+      .finally(() => setTimeout(() => setLoading(false), 1000));
   }, [currentPageNumber]);
 
   const openCart = () => {

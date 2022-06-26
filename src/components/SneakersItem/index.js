@@ -24,7 +24,7 @@ const SneakersItem = ({ id, img, price, title, sale }) => {
   };
 
   return (
-    <div className="sneakers__list-item">
+    <div className="sneakers__list-item true">
       <button className="sneakers__list-item-favorite" onClick={onClickHeart}>
         <img
           src={isAlreadyInFav(img) ? favoritedIcon : unfavoritedIcon}
