@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from 'react';
+import React, { useContext, useState } from 'react';
 import CompleteOrder from '../CompleteOrder';
 import AppContext from '../Context';
 import EmptyCart from '../EmptyCart';
@@ -14,22 +14,16 @@ const Cart = ({ closeCart, sum }) => {
   const [cartClosed, setCartClosed] = useState('cart');
   const [overlayHidden, setOverlayHidden] = useState('overlay');
 
-  const cartOverlay = useRef(null);
-  const cart = useRef(null);
-
   const onClickClose = () => {
     setCartClosed('cart hide');
     setTimeout(() => setCartClosed('cart hide hidden'), 190);
     setOverlayHidden('overlay hide');
     setTimeout(() => closeCart(), 190);
-    // cart.classList.add('hide');
-    // setTimeout(() => cart.classList.add('hidden'), 200);
-    //
   };
 
   return (
-    <div className={overlayHidden} ref={cartOverlay}>
-      <div className={cartClosed} ref={cart}>
+    <div className={overlayHidden}>
+      <div className={cartClosed}>
         <div className="cart__top">
           <h1>Корзина</h1>
           <button className="cart__close" onClick={onClickClose}>
