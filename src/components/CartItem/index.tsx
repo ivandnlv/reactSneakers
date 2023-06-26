@@ -1,13 +1,30 @@
 import React, { useContext } from 'react';
 import AppContext from '../Context';
 import deleteIcon from './delete.svg';
+import { ICartSneaker } from '../../models/interfaces/sneaker';
 
-const CartItem = ({ img, title, price, id, salePrice }) => {
+type CartItemProps = {
+  sneaker: ICartSneaker;
+};
+
+const CartItem: React.FC<CartItemProps> = ({ sneaker }) => {
   const { deleteFromCart, priceMoreThan10 } = useContext(AppContext);
-  const obj = { img, title, price, id };
+  const { img, price, title, salePrice } = sneaker;
 
   const onClickDelete = () => {
-    deleteFromCart(obj);
+    if (deleteFromCart) {
+      deleteFromCart(sneaker);
+    }
+  };
+
+  const finalPrice = () => {
+    if (priceMoreThan10) {
+      if (salePrice) {
+        return priceMoreThan10(salePrice);
+      } else {
+        return priceMoreThan10(price);
+      }
+    }
   };
 
   return (
@@ -17,7 +34,7 @@ const CartItem = ({ img, title, price, id, salePrice }) => {
         <p>{title}</p>
         <div className="cart__item-content-price">
           <span>
-            <b>{salePrice ? priceMoreThan10(salePrice) : priceMoreThan10(price)} руб.</b>
+            <b>{finalPrice()} руб.</b>
           </span>
         </div>
       </div>
