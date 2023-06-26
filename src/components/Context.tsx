@@ -12,6 +12,7 @@ const defaultState: IContext = {
   sneakersFilters: null,
   sneakersLength: 0,
   sneakersShowCount: 0,
+  closeCart() {},
 };
 
 const AppContext = createContext<IContext>(defaultState);

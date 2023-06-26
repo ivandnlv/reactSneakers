@@ -5,7 +5,12 @@ import EmptyCart from '../EmptyCart';
 import NotEmptyCart from '../NotEmptyCart';
 import closeIcon from './close.svg';
 
-const Cart = ({ closeCart, sum }) => {
+type CartProps = {
+  closeCart: () => void;
+  sum: number;
+};
+
+const Cart: React.FC<CartProps> = ({ closeCart, sum }) => {
   const { cartSneakers } = useContext(AppContext);
   const [orderComplete, setOrderComplete] = useState(false);
 
@@ -30,9 +35,9 @@ const Cart = ({ closeCart, sum }) => {
             <img src={closeIcon} alt="closeIcon" />
           </button>
         </div>
-        {cartSneakers.length === 0 && orderComplete === false ? (
+        {(!cartSneakers || !cartSneakers.length) && orderComplete === false ? (
           <EmptyCart closeCart={onClickClose} />
-        ) : cartSneakers.length === 0 && orderComplete === true ? (
+        ) : !cartSneakers && orderComplete === true ? (
           <CompleteOrder setOrderComplete={setOrderComplete} />
         ) : (
           <NotEmptyCart sum={sum} setOrderComplete={setOrderComplete} />

@@ -2,19 +2,18 @@ import { useEffect, useState } from 'react';
 import Main from '../../pages/Main';
 import getSneakers from '../../service/GetSneakers';
 import Header from '../Header';
-import AppContext from '../Context.tsx';
+import AppContext from '../Context';
 import Cart from '../Cart';
 import { Routes, Route } from 'react-router-dom';
 import Favorites from '../../pages/Favorites';
 import Orders from '../../pages/Orders';
 import axios from 'axios';
-import React from 'react';
-import { ICartSneaker, ISneaker } from '../../models/interfaces/sneaker';
+import { ISneaker } from '../../models/interfaces/sneaker';
 import { ISneakersFilters } from '../../models/interfaces/sneakersFilters';
 
 function App() {
   const [sneakers, setSneakers] = useState<ISneaker[] | null>(null);
-  const [cartSneakers, setCartSneakers] = useState<ICartSneaker[] | null>(null);
+  const [cartSneakers, setCartSneakers] = useState<ISneaker[] | null>(null);
   const [favoriteSneakers, setFavoriteSneakers] = useState<ISneaker[] | null>(null);
   const [isCartOpened, setIsCartOpened] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -32,15 +31,17 @@ function App() {
   const lastSneaker = sneakersShowCount * currentPageNumber;
   const firstSneaker = lastSneaker - sneakersShowCount;
 
+  // Получение данных с сервера
+
   useEffect(() => {
     setLoading(true);
     const localCartSneakers = localStorage.getItem('cartSneakers');
     const localFavSneakers = localStorage.getItem('favoriteSneakers');
     const localOrders = localStorage.getItem('orders');
 
-    if (localCartSneakers) setCartSneakers([...JSON.parse(localCartSneakers)]);
-    if (localFavSneakers) setFavoriteSneakers([...JSON.parse(localFavSneakers)]);
-    if (localOrders) setOrders([...JSON.parse(localOrders)]);
+    if (localCartSneakers) setCartSneakers(JSON.parse(localCartSneakers));
+    if (localFavSneakers) setFavoriteSneakers(JSON.parse(localFavSneakers));
+    if (localOrders) setOrders(JSON.parse(localOrders));
 
     const getSneakersLength = async () => {
       await axios
@@ -51,16 +52,21 @@ function App() {
     getSneakers(firstSneaker, lastSneaker)
       .then((res) => setSneakers(res))
       .finally(() => setTimeout(() => setLoading(false), 1000));
-  }, []);
+  }, [firstSneaker, lastSneaker]);
 
+  // Обновление данных в localStorage и измнение суммы, отображающейся в корзине при изменениях с корзиной
   useEffect(() => {
     localStorage.setItem('cartSneakers', JSON.stringify(cartSneakers));
     let sum = 0;
-    cartSneakers?.forEach((item) =>
-      item.salePrice ? (sum += item.salePrice) : (sum += item.price),
-    );
+    cartSneakers?.forEach((item) => {
+      if (item.sale) {
+        console.log('sale!');
+      }
+    });
     setSum(sum);
   }, [cartSneakers]);
+
+  // Обновление localStorage favorites и orders
 
   useEffect(() => {
     localStorage.setItem('favoriteSneakers', JSON.stringify(favoriteSneakers));
@@ -69,6 +75,8 @@ function App() {
   useEffect(() => {
     localStorage.setItem('orders', JSON.stringify(orders));
   }, [orders]);
+
+  // Изменение пагинации
 
   useEffect(() => {
     setLoading(true);
@@ -87,22 +95,26 @@ function App() {
 
   const sneakerToCart = (obj: ISneaker) => {
     if (cartSneakers?.find((item) => item.img === obj.img)) {
-      setCartSneakers((prev) => prev.filter((item) => item.img !== obj.img));
+      setCartSneakers((prev) =>
+        prev !== null ? prev.filter((item) => item.img !== obj.img) : prev,
+      );
     } else {
-      setCartSneakers((prev) => [...prev, obj]);
+      setCartSneakers((prev) => (prev !== null ? [...prev, obj] : null));
     }
   };
 
   const sneakerToFavorite = (obj: ISneaker) => {
     if (favoriteSneakers?.find((item) => item.img === obj.img)) {
-      setFavoriteSneakers((prev) => prev.filter((item) => item.img !== obj.img));
+      setFavoriteSneakers((prev) =>
+        prev !== null ? prev.filter((item) => item.img !== obj.img) : prev,
+      );
     } else {
-      setFavoriteSneakers((prev) => [...prev, obj]);
+      setFavoriteSneakers((prev) => (prev !== null ? [...prev, obj] : null));
     }
   };
 
   const sneakersToOrders = (arr: ISneaker[]) => {
-    setOrders((prev) => [...prev, ...arr]);
+    setOrders((prev) => (prev !== null ? [...prev, ...arr] : null));
   };
 
   const deleteFromCart = (obj: ISneaker) => {
@@ -114,11 +126,21 @@ function App() {
   };
 
   const isAlreadyInCart = (img: string) => {
-    return cartSneakers?.find((item) => item.img === img);
+    let yes = 0;
+    cartSneakers?.forEach((sneaker) => {
+      if (sneaker.img === img) yes += 1;
+    });
+    if (yes === 0) return false;
+    else return true;
   };
 
   const isAlreadyInFav = (img: string) => {
-    return favoriteSneakers?.find((item) => item.img === img);
+    let yes = 0;
+    favoriteSneakers?.forEach((sneaker) => {
+      if (sneaker.img === img) yes += 1;
+    });
+    if (yes === 0) return false;
+    else return true;
   };
 
   const priceMoreThan10 = (price: number): number | string => {
@@ -168,7 +190,6 @@ function App() {
           <Routes>
             <Route
               path="/"
-              exact
               element={
                 <Main
                   onSearchInputChange={onSearchInputChange}
@@ -176,8 +197,8 @@ function App() {
                   loading={loading}
                 />
               }></Route>
-            <Route path="/orders" exact element={<Orders />}></Route>
-            <Route path="/favorites" exact element={<Favorites />}></Route>
+            <Route path="/orders" element={<Orders />}></Route>
+            <Route path="/favorites" element={<Favorites />}></Route>
           </Routes>
         </div>
       </AppContext.Provider>

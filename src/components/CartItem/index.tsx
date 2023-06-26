@@ -1,15 +1,15 @@
 import React, { useContext } from 'react';
 import AppContext from '../Context';
-import deleteIcon from './delete.svg';
-import { ICartSneaker } from '../../models/interfaces/sneaker';
+import deleteIconPath from './delete.svg';
+import { ISneaker } from '../../models/interfaces/sneaker';
 
 type CartItemProps = {
-  sneaker: ICartSneaker;
+  sneaker: ISneaker;
 };
 
 const CartItem: React.FC<CartItemProps> = ({ sneaker }) => {
   const { deleteFromCart, priceMoreThan10 } = useContext(AppContext);
-  const { img, price, title, salePrice } = sneaker;
+  const { img, price, title, sale } = sneaker;
 
   const onClickDelete = () => {
     if (deleteFromCart) {
@@ -17,10 +17,12 @@ const CartItem: React.FC<CartItemProps> = ({ sneaker }) => {
     }
   };
 
+  console.log(sneaker);
+
   const finalPrice = () => {
     if (priceMoreThan10) {
-      if (salePrice) {
-        return priceMoreThan10(salePrice);
+      if (sale) {
+        return priceMoreThan10(price - price * sale);
       } else {
         return priceMoreThan10(price);
       }
@@ -39,7 +41,7 @@ const CartItem: React.FC<CartItemProps> = ({ sneaker }) => {
         </div>
       </div>
       <button className="cart__item-delete" onClick={onClickDelete}>
-        <img src={deleteIcon} alt="delete" />
+        <img src={deleteIconPath} alt="delete" />
       </button>
     </div>
   );

@@ -48,5 +48,9 @@
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
     "typescript": "^5.1.3"
-  }
+  },
+  "description": "Стэк: \r + React;\r + React Hooks (useState, useEffect, useContext);\r + React router V6;\r + Axios;\r + LocalStorage.",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC"
 }

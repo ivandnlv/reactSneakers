@@ -1,25 +1,31 @@
-import { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import toCartIcon from './add-to-cart.svg';
 import inCartIcon from './added-to-cart.svg';
 import unfavoritedIcon from './unfavorited.svg';
 import favoritedIcon from './favorited.svg';
 import AppContext from '../Context';
+import { ISneaker } from '../../models/interfaces/sneaker';
 
-const SneakersItem = ({ id, img, price, title, sale }) => {
+type SneakersItemProps = ISneaker;
+
+const SneakersItem: React.FC<SneakersItemProps> = (sneaker) => {
   const [inCart, setInCart] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
   const { sneakerToCart, isAlreadyInCart, priceMoreThan10, sneakerToFavorite, isAlreadyInFav } =
     useContext(AppContext);
-  const salePrice = Math.floor(price * sale);
-  const obj = sale ? { id, img, salePrice, title, price } : { id, img, price, title };
+  const salePrice = Math.floor(sneaker.price * sneaker.sale);
 
   const onClickPlus = () => {
-    sneakerToCart(obj);
+    if (sneakerToCart) {
+      sneakerToCart(sneaker);
+    }
     setInCart(!inCart);
   };
 
   const onClickHeart = () => {
-    sneakerToFavorite(obj);
+    if (sneakerToFavorite) {
+      sneakerToFavorite(sneaker);
+    }
     setIsFavorited(!isFavorited);
   };
 
@@ -27,19 +33,24 @@ const SneakersItem = ({ id, img, price, title, sale }) => {
     <div className="sneakers__list-item true">
       <button className="sneakers__list-item-favorite" onClick={onClickHeart}>
         <img
-          src={isAlreadyInFav(img) ? favoritedIcon : unfavoritedIcon}
+          src={isAlreadyInFav && isAlreadyInFav(sneaker.img) ? favoritedIcon : unfavoritedIcon}
           alt={isFavorited ? 'favorited' : 'unfavorited'}
         />
       </button>
-      <img src={img} alt={'sneaker' + id} className="sneakers__list-item-img" />
-      <p>{title}</p>
-      <span>Цена: {sale ? <b className="sneakers__list-item-prev"> {price}</b> : null}</span>
-      <b className={sale ? 'sneakers__list-item-sale' : null}>
-        {sale ? priceMoreThan10(salePrice) : priceMoreThan10(price)} руб.
+      <img src={sneaker.img} alt={'sneaker' + sneaker.id} className="sneakers__list-item-img" />
+      <p>{sneaker.title}</p>
+      <span>
+        Цена: {sneaker.sale ? <b className="sneakers__list-item-prev"> {sneaker.price}</b> : null}
+      </span>
+      <b className={sneaker.sale ? 'sneakers__list-item-sale' : undefined}>
+        {sneaker.sale && priceMoreThan10
+          ? priceMoreThan10(salePrice)
+          : priceMoreThan10 && priceMoreThan10(sneaker.price)}{' '}
+        руб.
       </b>
       <button className="sneakers__list-item-tocart" onClick={onClickPlus}>
         <img
-          src={isAlreadyInCart(img) ? inCartIcon : toCartIcon}
+          src={isAlreadyInCart && isAlreadyInCart(sneaker.img) ? inCartIcon : toCartIcon}
           alt={inCart ? 'alreadyincart' : 'addtocart'}
         />
       </button>

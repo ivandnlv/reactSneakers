@@ -1,36 +1,45 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import AppContext from './Context';
 import Btn from '../UI/Btn';
 import CartItem from './CartItem';
 
-const NotEmptyCart = ({ sum, setOrderComplete }) => {
+type NotEmptyCartProps = {
+  sum: number;
+  setOrderComplete: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const NotEmptyCart: React.FC<NotEmptyCartProps> = ({ sum, setOrderComplete }) => {
   const { cartSneakers, priceMoreThan10, sneakersToOrders, setCartSneakers } =
     useContext(AppContext);
-  let sale = 0;
 
-  cartSneakers.forEach((item) => {
-    if (item.salePrice) {
-      sale += item.price - item.salePrice;
+  function sale() {
+    let sale = 0;
+
+    if (cartSneakers && cartSneakers.length) {
+      cartSneakers.forEach((item) => {
+        if (item.sale) {
+          sale += item.price - (item.price - item.price * item.sale);
+          console.log(sale);
+        }
+      });
     }
-  });
+
+    return sale;
+  }
 
   const onClickOrder = () => {
     setOrderComplete(true);
-    sneakersToOrders(cartSneakers);
-    setCartSneakers([]);
+    if (sneakersToOrders && setCartSneakers && cartSneakers) {
+      sneakersToOrders(cartSneakers);
+      setCartSneakers(null);
+    }
   };
 
   return (
     <>
       <div className="cart__items">
-        {cartSneakers.map((item) => (
-          <CartItem
-            id={item.id}
-            key={item.id}
-            title={item.title}
-            img={item.img}
-            price={item.salePrice ? item.salePrice : item.price}
-          />
+        {cartSneakers?.map((item) => (
+          <CartItem key={item.id} sneaker={item} />
         ))}
       </div>
       <div className="cart__total">
@@ -39,18 +48,18 @@ const NotEmptyCart = ({ sum, setOrderComplete }) => {
           <div></div>
           <b>300 руб.</b>
         </div>
-        {sale !== 0 ? (
+        {sale() !== 0 ? (
           <div className="cart__total-item sale">
             <span>Скидка</span>
             <div></div>
-            <b>{sale} руб.</b>
+            <b>{sale()} руб.</b>
           </div>
         ) : null}
 
         <div className="cart__total-item">
           <span>Итого</span>
           <div></div>
-          <b>{priceMoreThan10(sum + 300)} руб.</b>
+          <b>{priceMoreThan10 && priceMoreThan10(sum + 300)} руб.</b>
         </div>
         <Btn btnType="go" onClick={onClickOrder}>
           Оформить заказ

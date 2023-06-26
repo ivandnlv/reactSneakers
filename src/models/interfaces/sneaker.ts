@@ -5,7 +5,3 @@ export interface ISneaker {
   price: number;
   sale: number;
 }
-
-export interface ICartSneaker extends ISneaker {
-  salePrice?: number;
-}
