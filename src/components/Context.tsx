@@ -13,6 +13,13 @@ const defaultState: IContext = {
   sneakersLength: 0,
   sneakersShowCount: 0,
   closeCart() {},
+  deleteFromCart() {},
+  isAlreadyInCart(img, method) {},
+  isAlreadyInFav(img, method) {},
+  priceMoreThan10(price, method) {},
+  sneakersToOrders(arr) {},
+  sneakerToCart(obj, method) {},
+  sneakerToFavorite(obj) {},
 };
 
 const AppContext = createContext<IContext>(defaultState);
