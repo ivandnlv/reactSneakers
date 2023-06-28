@@ -31,7 +31,7 @@ const Main: React.FC<MainProps> = ({ loading, onSearchInputChange }) => {
           <Pagination />
           <Search onSearchInputChange={onSearchInputChange} />
         </div>
-        <div className="sneakers__wrapper">
+        {/* <div className="sneakers__wrapper">
           <div className="sneakers__list">
             {loading
               ? [...Array(6)].map((item, index) => <SneakersSkeleton key={index} />)
@@ -50,7 +50,7 @@ const Main: React.FC<MainProps> = ({ loading, onSearchInputChange }) => {
                   ))}
           </div>
           <Filters />
-        </div>
+        </div> */}
         <div className="sneakers__pagination">
           <Pagination />
         </div>

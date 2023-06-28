@@ -10,8 +10,15 @@ import Orders from '../../pages/Orders';
 import axios from 'axios';
 import { ISneaker } from '../../models/interfaces/sneaker';
 import { ISneakersFilters } from '../../models/interfaces/sneakersFilters';
+import { useDispatch } from 'react-redux';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
+import { AppDispatch } from '../../redux/store';
 
 function App() {
+  const dispatch: AppDispatch = useDispatch();
+
+  // const {  } = useTypedSelector(state => state.sneakers)
+
   const [sneakers, setSneakers] = useState<ISneaker[] | null>(null);
   const [cartSneakers, setCartSneakers] = useState<ISneaker[] | null>(null);
   const [favoriteSneakers, setFavoriteSneakers] = useState<ISneaker[] | null>(null);
@@ -183,8 +190,8 @@ function App() {
           setCurrentPageNumber,
           currentPageNumber,
         }}>
-        <Header openCart={openCart} sum={sum} />
-        {isCartOpened ? <Cart closeCart={closeCart} sum={sum} /> : null}
+        {/* <Header openCart={openCart} sum={sum} /> */}
+        {/* {isCartOpened ? <Cart closeCart={closeCart} sum={sum} /> : null} */}
         <hr />
         <div className="content">
           <Routes>

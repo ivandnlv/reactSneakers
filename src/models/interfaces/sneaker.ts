@@ -3,5 +3,5 @@ export interface ISneaker {
   title: string;
   img: string;
   price: number;
-  sale: number;
+  sale?: number;
 }
