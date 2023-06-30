@@ -3,6 +3,7 @@ import { ISneaker } from '../../models/interfaces/sneaker';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { db } from '../../firebase';
 import { doc, getDoc } from 'firebase/firestore/lite';
+
 export const fetchSneakers = createAsyncThunk('sneakers/fetchSneakers', async () => {
   try {
     const collectionId = '1';

@@ -1,9 +1,18 @@
-import React from 'react';
+import { useEffect } from 'react';
 import EmptyOrders from '../components/EmptyOrders';
 import SneakersItem from '../components/SneakersItem';
 import { useTypedSelector } from '../hooks/useTypedSelector';
+import { AppDispatch } from '../redux/store';
+import { useDispatch } from 'react-redux';
+import { setPage } from '../redux/slices/sneakers';
 
 const Orders = () => {
+  const dispatch: AppDispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setPage('orders'));
+  }, [dispatch]);
+
   const { ordersSneakers } = useTypedSelector((state) => state.orders);
 
   return (

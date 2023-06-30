@@ -5,7 +5,11 @@ import { AppDispatch } from '../../redux/store';
 import { useDispatch } from 'react-redux';
 import { closeCart } from '../../redux/slices/cart';
 
-const CompleteOrder = ({ setOrderComplete }) => {
+interface ICompleteOrderProps {
+  setOrderComplete: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const CompleteOrder: React.FC<ICompleteOrderProps> = ({ setOrderComplete }) => {
   const dispatch: AppDispatch = useDispatch();
 
   const onCloseCart = () => {

@@ -2,8 +2,6 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { ISneaker } from '../../models/interfaces/sneaker';
 import { Brands } from '../../models/types/brands';
 
-// export type Sort = 'asc' | 'desc' | 'default';
-
 export enum SortEnum {
   ASC = 'asc',
   DESC = 'desc',
@@ -18,7 +16,7 @@ interface IFiltersState {
   search: string;
 }
 
-const defaultState: IFiltersState = {
+export const defaultState: IFiltersState = {
   filteredSneakers: null,
   brands: null,
   sort: SortEnum.DEFAULT,
@@ -66,8 +64,8 @@ const filtersSlice = createSlice({
     changeSearch(state, action: PayloadAction<string>) {
       state.search = action.payload;
     },
-    resetFilters(state, action: PayloadAction<IFiltersState>) {
-      state = action.payload;
+    resetFilters(state) {
+      state = defaultState;
     },
   },
 });

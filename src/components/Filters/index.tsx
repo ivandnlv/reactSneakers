@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useEffect } from 'react';
 import Btn from '../../UI/Btn';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import {
@@ -7,15 +7,31 @@ import {
   changeSale,
   changeSort,
   resetFilters,
+  setFilteredSneakers,
 } from '../../redux/slices/filters';
 import { AppDispatch } from '../../redux/store';
 import { useDispatch } from 'react-redux';
 import { Brands } from '../../models/types/brands';
+import { defaultState } from '../../redux/slices/filters';
 
 const Filters = () => {
   const dispatch: AppDispatch = useDispatch();
 
-  const { sale } = useTypedSelector((state) => state.filters);
+  const { sale, brands, search, sort } = useTypedSelector((state) => state.filters);
+  const { sneakers } = useTypedSelector((state) => state.sneakers);
+
+  useEffect(() => {
+    if (
+      sale !== defaultState.sale ||
+      brands !== defaultState.brands ||
+      search !== defaultState.search ||
+      sort !== defaultState.sort
+    ) {
+      if (sneakers) {
+        dispatch(setFilteredSneakers(sneakers));
+      }
+    }
+  }, [sale, brands, search, sort]);
 
   const onSortChange = (e: ChangeEvent) => {
     if (e.target instanceof HTMLSelectElement) {

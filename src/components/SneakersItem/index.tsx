@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import toCartIcon from './add-to-cart.svg';
 import inCartIcon from './added-to-cart.svg';
 import unfavoritedIcon from './unfavorited.svg';
@@ -13,55 +13,75 @@ import { priceMoreThan10 } from '../App';
 
 type SneakersItemProps = {
   sneaker: ISneaker;
+  isOrders?: boolean;
 };
 
-const SneakersItem: React.FC<SneakersItemProps> = ({ sneaker }) => {
+const SneakersItem: React.FC<SneakersItemProps> = ({ sneaker, isOrders = false }) => {
+  useEffect(() => {
+    setIsInCart(isAlreadyInCart());
+    setIsInFavs(isAlreadyInFav());
+  }, []);
+
   const dispatch: AppDispatch = useDispatch();
 
-  const { cartSneakers } = useTypedSelector((state) => state.cart);
+  const cartSneakers = useTypedSelector((state) => state.cart.cartSneakers);
   const { favSneakers } = useTypedSelector((state) => state.favorites);
 
-  const salePrice = Math.floor(sneaker.price * sneaker.sale);
+  const [isInCart, setIsInCart] = useState(false);
+  const [isInFavs, setIsInFavs] = useState(false);
+
+  const salePrice = sneaker.sale ? Math.floor(sneaker.price * sneaker.sale) : null;
 
   const onClickPlus = () => {
+    setIsInCart(!isInCart);
     dispatch(addToCart(sneaker));
   };
 
   const onClickHeart = () => {
+    setIsInFavs(!isInFavs);
     dispatch(addToFavs(sneaker));
   };
 
-  const isAlreadyInCart = () => {
-    return cartSneakers.includes(sneaker);
+  const isAlreadyInCart = (): boolean => {
+    if (cartSneakers) {
+      return cartSneakers.some((cartSneaker) => cartSneaker.id === sneaker.id);
+    } else return false;
   };
 
-  const isAlreadyInFav = () => {
-    return favSneakers.includes(sneaker);
+  const isAlreadyInFav = (): boolean => {
+    if (favSneakers) {
+      return favSneakers.some((favSneaker) => favSneaker.id === sneaker.id);
+    }
+    return false;
   };
 
   return (
     <div className="sneakers__list-item true">
-      <button className="sneakers__list-item-favorite" onClick={onClickHeart}>
-        <img
-          src={isAlreadyInFav ? favoritedIcon : unfavoritedIcon}
-          alt={isAlreadyInFav ? 'favorited' : 'unfavorited'}
-        />
-      </button>
+      {!isOrders && (
+        <button className="sneakers__list-item-favorite" onClick={onClickHeart}>
+          <img
+            src={isInFavs ? favoritedIcon : unfavoritedIcon}
+            alt={isInFavs ? 'favorited' : 'unfavorited'}
+          />
+        </button>
+      )}
       <img src={sneaker.imgUrl} alt={'sneaker' + sneaker.id} className="sneakers__list-item-img" />
       <p>{sneaker.title}</p>
       <span>
         Цена: {sneaker.sale ? <b className="sneakers__list-item-prev"> {sneaker.price}</b> : null}
       </span>
       <b className={sneaker.sale ? 'sneakers__list-item-sale' : undefined}>
-        {sneaker.sale ? priceMoreThan10(salePrice) : priceMoreThan10(sneaker.price)}
+        {salePrice ? priceMoreThan10(salePrice) : priceMoreThan10(sneaker.price)}
         руб.
       </b>
-      <button className="sneakers__list-item-tocart" onClick={onClickPlus}>
-        <img
-          src={!isAlreadyInCart ? inCartIcon : toCartIcon}
-          alt={isAlreadyInCart ? 'alreadyincart' : 'addtocart'}
-        />
-      </button>
+      {!isOrders && (
+        <button className="sneakers__list-item-tocart" onClick={onClickPlus}>
+          <img
+            src={isInCart ? inCartIcon : toCartIcon}
+            alt={isInFavs ? 'alreadyincart' : 'addtocart'}
+          />
+        </button>
+      )}
     </div>
   );
 };

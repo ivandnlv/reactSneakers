@@ -18,7 +18,9 @@ const NotEmptyCart: React.FC<NotEmptyCartProps> = ({ setOrderComplete }) => {
   const { cartSneakers, finalPrice } = useTypedSelector((state) => state.cart);
 
   const onAddToOrders = () => {
-    dispatch(setOrders(cartSneakers));
+    if (cartSneakers) {
+      dispatch(setOrders(cartSneakers));
+    }
     dispatch(resetCart());
   };
 

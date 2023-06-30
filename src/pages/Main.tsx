@@ -9,18 +9,18 @@ import Pagination from '../components/Pagination';
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import { AppDispatch } from '../redux/store';
 import { useDispatch } from 'react-redux';
-import { fetchSneakers } from '../redux/slices/sneakers';
+import { fetchSneakers, setPage } from '../redux/slices/sneakers';
 
 const Main: React.FC = () => {
   // const { sneakers, isAlreadyInCart, sneakersFilters, searchValue } = useContext(AppContext);
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(setPage('main'));
     dispatch(fetchSneakers());
   }, [dispatch]);
 
   const { sneakers, loading } = useTypedSelector((state) => state.sneakers);
-  const { cartSneakers } = useTypedSelector((state) => state.cart);
   const { filteredSneakers, search } = useTypedSelector((state) => state.filters);
 
   return (

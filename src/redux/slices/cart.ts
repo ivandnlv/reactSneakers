@@ -1,8 +1,10 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { ISneaker } from '../../models/interfaces/sneaker';
 
+type CartSneakers = ISneaker[] | null;
+
 interface ICartState {
-  cartSneakers: ISneaker[] | null;
+  cartSneakers: CartSneakers;
   sale: number;
   finalPrice: number;
   open: boolean;
@@ -22,24 +24,29 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart(state, action: PayloadAction<ISneaker>) {
-      if (state.cartSneakers && !state.cartSneakers?.includes(action.payload)) {
-        state.cartSneakers?.push(action.payload);
-        if (action.payload.sale) {
-          state.finalPrice += Math.floor(action.payload.sale * action.payload.price);
+      if (state.cartSneakers) {
+        if (state.cartSneakers.some((sneaker) => sneaker.id === action.payload.id)) {
+          state.cartSneakers = state.cartSneakers.filter(
+            (sneaker) => sneaker.id !== action.payload.id,
+          );
+          if (action.payload.sale) {
+            state.finalPrice -= Math.floor(action.payload.price * action.payload.sale);
+            return;
+          } else {
+            state.finalPrice -= action.payload.price;
+            return;
+          }
         } else {
-          state.finalPrice += action.payload.price;
+          state.cartSneakers.push(action.payload);
         }
-      } else if (!state.cartSneakers) {
+      } else {
         state.cartSneakers = [action.payload];
-        if (action.payload.sale) {
-          state.finalPrice += Math.floor(action.payload.sale * action.payload.price);
-        } else {
-          state.finalPrice += action.payload.price;
-        }
-      } else if (state.cartSneakers.includes(action.payload)) {
-        state.cartSneakers = state.cartSneakers.filter(
-          (sneaker) => sneaker.id !== action.payload.id,
-        );
+      }
+
+      if (action.payload.sale) {
+        state.finalPrice += Math.floor(action.payload.price * action.payload.sale);
+      } else {
+        state.finalPrice += action.payload.price;
       }
     },
     removeFromCart(state, action: PayloadAction<ISneaker>) {
@@ -57,7 +64,7 @@ const cartSlice = createSlice({
         state.finalPrice -= action.payload.price;
       }
     },
-    setCart(state, action: PayloadAction<ISneaker[]>) {
+    setCart(state, action: PayloadAction<ISneaker[] | null>) {
       state.cartSneakers = action.payload;
     },
     closeCart(state) {
@@ -67,7 +74,9 @@ const cartSlice = createSlice({
       state.open = true;
     },
     resetCart(state) {
-      state = defaultValues;
+      state.cartSneakers = defaultValues.cartSneakers;
+      state.finalPrice = defaultValues.finalPrice;
+      state.sale = defaultValues.sale;
     },
   },
 });

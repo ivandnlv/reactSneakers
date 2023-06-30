@@ -1,8 +1,18 @@
+import { useEffect } from 'react';
 import SneakersItem from '../components/SneakersItem';
 import EmptyFavorites from '../components/EmptyFavorites';
 import { useTypedSelector } from '../hooks/useTypedSelector';
+import { AppDispatch } from '../redux/store';
+import { useDispatch } from 'react-redux';
+import { setPage } from '../redux/slices/sneakers';
 
 const Favorites = () => {
+  const dispatch: AppDispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setPage('favorites'));
+  }, [dispatch]);
+
   const { favSneakers } = useTypedSelector((state) => state.favorites);
   return (
     <div className="sneakers">
