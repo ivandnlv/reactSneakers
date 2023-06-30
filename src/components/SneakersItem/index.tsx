@@ -1,57 +1,65 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import toCartIcon from './add-to-cart.svg';
 import inCartIcon from './added-to-cart.svg';
 import unfavoritedIcon from './unfavorited.svg';
 import favoritedIcon from './favorited.svg';
-import AppContext from '../Context';
 import { ISneaker } from '../../models/interfaces/sneaker';
+import { AppDispatch } from '../../redux/store';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../redux/slices/cart';
+import { addToFavs } from '../../redux/slices/favorites';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
+import { priceMoreThan10 } from '../App';
 
-type SneakersItemProps = ISneaker;
+type SneakersItemProps = {
+  sneaker: ISneaker;
+};
 
-const SneakersItem: React.FC<SneakersItemProps> = (sneaker) => {
-  const [inCart, setInCart] = useState(false);
-  const [isFavorited, setIsFavorited] = useState(false);
-  const { sneakerToCart, isAlreadyInCart, priceMoreThan10, sneakerToFavorite, isAlreadyInFav } =
-    useContext(AppContext);
+const SneakersItem: React.FC<SneakersItemProps> = ({ sneaker }) => {
+  const dispatch: AppDispatch = useDispatch();
+
+  const { cartSneakers } = useTypedSelector((state) => state.cart);
+  const { favSneakers } = useTypedSelector((state) => state.favorites);
+
   const salePrice = Math.floor(sneaker.price * sneaker.sale);
 
   const onClickPlus = () => {
-    if (sneakerToCart) {
-      sneakerToCart(sneaker);
-    }
-    setInCart(!inCart);
+    dispatch(addToCart(sneaker));
   };
 
   const onClickHeart = () => {
-    if (sneakerToFavorite) {
-      sneakerToFavorite(sneaker);
-    }
-    setIsFavorited(!isFavorited);
+    dispatch(addToFavs(sneaker));
+  };
+
+  const isAlreadyInCart = () => {
+    return cartSneakers.includes(sneaker);
+  };
+
+  const isAlreadyInFav = () => {
+    return favSneakers.includes(sneaker);
   };
 
   return (
     <div className="sneakers__list-item true">
       <button className="sneakers__list-item-favorite" onClick={onClickHeart}>
         <img
-          src={isAlreadyInFav && isAlreadyInFav(sneaker.img) ? favoritedIcon : unfavoritedIcon}
-          alt={isFavorited ? 'favorited' : 'unfavorited'}
+          src={isAlreadyInFav ? favoritedIcon : unfavoritedIcon}
+          alt={isAlreadyInFav ? 'favorited' : 'unfavorited'}
         />
       </button>
-      <img src={sneaker.img} alt={'sneaker' + sneaker.id} className="sneakers__list-item-img" />
+      <img src={sneaker.imgUrl} alt={'sneaker' + sneaker.id} className="sneakers__list-item-img" />
       <p>{sneaker.title}</p>
       <span>
         Цена: {sneaker.sale ? <b className="sneakers__list-item-prev"> {sneaker.price}</b> : null}
       </span>
       <b className={sneaker.sale ? 'sneakers__list-item-sale' : undefined}>
-        {sneaker.sale && priceMoreThan10
-          ? priceMoreThan10(salePrice)
-          : priceMoreThan10 && priceMoreThan10(sneaker.price)}{' '}
+        {sneaker.sale ? priceMoreThan10(salePrice) : priceMoreThan10(sneaker.price)}
         руб.
       </b>
       <button className="sneakers__list-item-tocart" onClick={onClickPlus}>
         <img
-          src={isAlreadyInCart && isAlreadyInCart(sneaker.img) ? inCartIcon : toCartIcon}
-          alt={inCart ? 'alreadyincart' : 'addtocart'}
+          src={!isAlreadyInCart ? inCartIcon : toCartIcon}
+          alt={isAlreadyInCart ? 'alreadyincart' : 'addtocart'}
         />
       </button>
     </div>

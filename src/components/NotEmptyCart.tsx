@@ -1,16 +1,26 @@
-import React, { useContext, useEffect } from 'react';
-import AppContext from './Context';
+import React from 'react';
 import Btn from '../UI/Btn';
 import CartItem from './CartItem';
+import { useTypedSelector } from '../hooks/useTypedSelector';
+import { priceMoreThan10 } from './App';
+import { AppDispatch } from '../redux/store';
+import { useDispatch } from 'react-redux';
+import { resetCart } from '../redux/slices/cart';
+import { setOrders } from '../redux/slices/orders';
 
 type NotEmptyCartProps = {
-  sum: number;
   setOrderComplete: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const NotEmptyCart: React.FC<NotEmptyCartProps> = ({ sum, setOrderComplete }) => {
-  const { cartSneakers, priceMoreThan10, sneakersToOrders, setCartSneakers } =
-    useContext(AppContext);
+const NotEmptyCart: React.FC<NotEmptyCartProps> = ({ setOrderComplete }) => {
+  const dispatch: AppDispatch = useDispatch();
+
+  const { cartSneakers, finalPrice } = useTypedSelector((state) => state.cart);
+
+  const onAddToOrders = () => {
+    dispatch(setOrders(cartSneakers));
+    dispatch(resetCart());
+  };
 
   function sale() {
     let sale = 0;
@@ -18,8 +28,7 @@ const NotEmptyCart: React.FC<NotEmptyCartProps> = ({ sum, setOrderComplete }) =>
     if (cartSneakers && cartSneakers.length) {
       cartSneakers.forEach((item) => {
         if (item.sale) {
-          sale += item.price - (item.price - item.price * item.sale);
-          console.log(sale);
+          sale += item.price - Math.floor(item.price * item.sale);
         }
       });
     }
@@ -29,10 +38,7 @@ const NotEmptyCart: React.FC<NotEmptyCartProps> = ({ sum, setOrderComplete }) =>
 
   const onClickOrder = () => {
     setOrderComplete(true);
-    if (sneakersToOrders && setCartSneakers && cartSneakers) {
-      sneakersToOrders(cartSneakers);
-      setCartSneakers(null);
-    }
+    onAddToOrders();
   };
 
   return (
@@ -59,7 +65,7 @@ const NotEmptyCart: React.FC<NotEmptyCartProps> = ({ sum, setOrderComplete }) =>
         <div className="cart__total-item">
           <span>Итого</span>
           <div></div>
-          <b>{priceMoreThan10 && priceMoreThan10(sum + 300)} руб.</b>
+          <b>{priceMoreThan10 && priceMoreThan10(finalPrice + 300)} руб.</b>
         </div>
         <Btn btnType="go" onClick={onClickOrder}>
           Оформить заказ

@@ -2,11 +2,11 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { ISneaker } from '../../models/interfaces/sneaker';
 
 interface IFavoritesState {
-  sneakers: ISneaker[] | null;
+  favSneakers: ISneaker[] | null;
 }
 
 const initialState: IFavoritesState = {
-  sneakers: null,
+  favSneakers: null,
 };
 
 const favoritesSlice = createSlice({
@@ -14,21 +14,21 @@ const favoritesSlice = createSlice({
   initialState,
   reducers: {
     addToFavs(state, action: PayloadAction<ISneaker>) {
-      if (state.sneakers && !state.sneakers.includes(action.payload)) {
-        state.sneakers.push(action.payload);
-      } else if (state.sneakers && state.sneakers.includes(action.payload)) {
-        state.sneakers = state.sneakers.filter((sneaker) => sneaker.id !== action.payload.id);
-      } else if (!state.sneakers) {
-        state.sneakers = [action.payload];
+      if (state.favSneakers && !state.favSneakers.includes(action.payload)) {
+        state.favSneakers.push(action.payload);
+      } else if (state.favSneakers && state.favSneakers.includes(action.payload)) {
+        state.favSneakers = state.favSneakers.filter((sneaker) => sneaker.id !== action.payload.id);
+      } else if (!state.favSneakers) {
+        state.favSneakers = [action.payload];
       }
     },
     removeFromFavs(state, action: PayloadAction<ISneaker>) {
-      if (state.sneakers) {
-        state.sneakers = state.sneakers.filter((sneaker) => sneaker.id !== action.payload.id);
+      if (state.favSneakers) {
+        state.favSneakers = state.favSneakers.filter((sneaker) => sneaker.id !== action.payload.id);
       }
     },
     setFavs(state, action: PayloadAction<ISneaker[]>) {
-      state.sneakers = action.payload;
+      state.favSneakers = action.payload;
     },
   },
 });

@@ -1,18 +1,22 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import CompleteOrder from '../CompleteOrder';
-import AppContext from '../Context';
 import EmptyCart from '../EmptyCart';
 import NotEmptyCart from '../NotEmptyCart';
 import closeIcon from './close.svg';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
+import { AppDispatch } from '../../redux/store';
+import { useDispatch } from 'react-redux';
+import { closeCart } from '../../redux/slices/cart';
 
-type CartProps = {
-  closeCart: () => void;
-  sum: number;
-};
+const Cart: React.FC = () => {
+  const dispatch: AppDispatch = useDispatch();
 
-const Cart: React.FC<CartProps> = ({ closeCart, sum }) => {
-  const { cartSneakers } = useContext(AppContext);
+  const { cartSneakers, open, finalPrice } = useTypedSelector((state) => state.cart);
   const [orderComplete, setOrderComplete] = useState(false);
+
+  const onCloseCart = () => {
+    dispatch(closeCart());
+  };
 
   // Animations
 
@@ -23,7 +27,7 @@ const Cart: React.FC<CartProps> = ({ closeCart, sum }) => {
     setCartClosed('cart hide');
     setTimeout(() => setCartClosed('cart hide hidden'), 190);
     setOverlayHidden('overlay hide');
-    setTimeout(() => closeCart(), 190);
+    setTimeout(() => onCloseCart(), 190);
   };
 
   return (
@@ -35,12 +39,12 @@ const Cart: React.FC<CartProps> = ({ closeCart, sum }) => {
             <img src={closeIcon} alt="closeIcon" />
           </button>
         </div>
-        {(!cartSneakers || !cartSneakers.length) && orderComplete === false ? (
+        {(!cartSneakers || !cartSneakers.length) && !orderComplete ? (
           <EmptyCart closeCart={onClickClose} />
-        ) : !cartSneakers && orderComplete === true ? (
+        ) : !cartSneakers && orderComplete ? (
           <CompleteOrder setOrderComplete={setOrderComplete} />
         ) : (
-          <NotEmptyCart sum={sum} setOrderComplete={setOrderComplete} />
+          <NotEmptyCart setOrderComplete={setOrderComplete} />
         )}
       </div>
     </div>

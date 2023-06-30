@@ -2,36 +2,52 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { ISneaker } from '../../models/interfaces/sneaker';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { db } from '../../firebase';
-import { doc, getDocFromServer } from 'firebase/firestore';
-
-const docRef = doc(db, 'lskFaQfTOf9kHr5q7Ncy', 'Sneakers');
-
+import { doc, getDoc } from 'firebase/firestore/lite';
 export const fetchSneakers = createAsyncThunk('sneakers/fetchSneakers', async () => {
-  const sneakers = await getDocFromServer(docRef);
-
-  console.log(sneakers.data());
-
-  return sneakers.data();
+  try {
+    const collectionId = '1';
+    const documentId = 'lskFaQfTOf9kHr5q7Ncy';
+    const docRef = doc(db, collectionId, documentId);
+    const docSnapshot = await getDoc(docRef);
+    if (docSnapshot.exists()) {
+      const data = docSnapshot.data();
+      const sneakersArray = data.Sneakers;
+      return sneakersArray as ISneaker[];
+    } else {
+      console.log('Документ не найден');
+      return [];
+    }
+  } catch (error) {
+    console.log('Ошибка получения документа:', error);
+    throw error;
+  }
 });
+
+export type Pages = 'main' | 'favorites' | 'orders';
 
 interface ISneakersState {
   sneakers: ISneaker[] | null;
   loading: boolean;
   errors: any[] | null;
+  page: Pages;
 }
 
 const initialState: ISneakersState = {
   sneakers: null,
   loading: false,
   errors: null,
+  page: 'main',
 };
 
 const sneakersSlice = createSlice({
   name: 'sneakers',
   initialState,
   reducers: {
-    setSneakers(state, action: PayloadAction<ISneaker[]>) {
+    setItems(state, action: PayloadAction<ISneaker[]>) {
       state.sneakers = action.payload;
+    },
+    setPage(state, action: PayloadAction<Pages>) {
+      state.page = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -45,14 +61,14 @@ const sneakersSlice = createSlice({
       state.errors?.push(action.error);
       state.sneakers = null;
     });
-    builder.addCase(fetchSneakers.fulfilled, (state) => {
+    builder.addCase(fetchSneakers.fulfilled, (state, action) => {
       state.loading = false;
       state.errors = null;
-      // state.sneakers = action.payload;
+      state.sneakers = action.payload as ISneaker[];
     });
   },
 });
 
-export const { setSneakers } = sneakersSlice.actions;
+export const { setItems, setPage } = sneakersSlice.actions;
 
 export default sneakersSlice.reducer;

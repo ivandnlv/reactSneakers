@@ -1,10 +1,26 @@
-import { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import AppContext from '../Context';
 import logo from './logo.png';
+import { priceMoreThan10 } from '../App';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
+import { AppDispatch } from '../../redux/store';
+import { useDispatch } from 'react-redux';
+import { Pages, setPage } from '../../redux/slices/sneakers';
+import { openCart } from '../../redux/slices/cart';
 
-const Header = ({ openCart, sum }) => {
-  const { priceMoreThan10, currentPage, setCurrentPage } = useContext(AppContext);
+const Header = () => {
+  // const {  currentPage, setCurrentPage } = useContext(AppContext);
+  const dispatch: AppDispatch = useDispatch();
+
+  const { finalPrice } = useTypedSelector((state) => state.cart);
+  const { page } = useTypedSelector((state) => state.sneakers);
+
+  const setCurrentPage = (page: Pages) => {
+    dispatch(setPage(page));
+  };
+
+  const onOpenCart = () => {
+    dispatch(openCart());
+  };
 
   return (
     <header className="header">
@@ -20,7 +36,7 @@ const Header = ({ openCart, sum }) => {
       <nav className="header__nav">
         <Link to="/">
           <li
-            className={currentPage === 'main' ? 'header__nav-item selected' : 'header__nav-item'}
+            className={page === 'main' ? 'header__nav-item selected' : 'header__nav-item'}
             onClick={() => setCurrentPage('main')}>
             Главная
           </li>
@@ -28,7 +44,7 @@ const Header = ({ openCart, sum }) => {
 
         <Link to="/orders">
           <li
-            className={currentPage === 'orders' ? 'header__nav-item selected' : 'header__nav-item'}
+            className={page === 'orders' ? 'header__nav-item selected' : 'header__nav-item'}
             onClick={() => setCurrentPage('orders')}>
             Мои покупки
           </li>
@@ -37,17 +53,15 @@ const Header = ({ openCart, sum }) => {
         <Link to="/favorites">
           <li
             className={
-              currentPage === 'favorites'
-                ? 'header__nav-item selected-favorites'
-                : 'header__nav-item'
+              page === 'favorites' ? 'header__nav-item selected-favorites' : 'header__nav-item'
             }
             onClick={() => setCurrentPage('favorites')}>
             Избранное
           </li>
         </Link>
       </nav>
-      <div className="header__cart" onClick={openCart}>
-        <b>{priceMoreThan10(sum)} руб.</b>
+      <div className="header__cart" onClick={onOpenCart}>
+        <b>{priceMoreThan10(finalPrice)} руб.</b>
         <img src="./img/cart.svg" alt="cart" />
       </div>
     </header>

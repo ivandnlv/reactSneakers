@@ -1,47 +1,40 @@
-import { useContext, useState } from 'react';
+import { ChangeEvent } from 'react';
 import Btn from '../../UI/Btn';
-import AppContext from '../Context';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
+import {
+  SortEnum,
+  addBrand,
+  changeSale,
+  changeSort,
+  resetFilters,
+} from '../../redux/slices/filters';
+import { AppDispatch } from '../../redux/store';
+import { useDispatch } from 'react-redux';
+import { Brands } from '../../models/types/brands';
 
 const Filters = () => {
-  const { setSneakersFilters } = useContext(AppContext);
+  const dispatch: AppDispatch = useDispatch();
 
-  const [filters, setFilters] = useState({
-    brands: [],
-    onlySale: false,
-    sort: 'default',
-  });
+  const { sale } = useTypedSelector((state) => state.filters);
 
-  const onSortChange = (e) => {
-    setFilters({ ...filters, sort: e.target.value });
+  const onSortChange = (e: ChangeEvent) => {
+    if (e.target instanceof HTMLSelectElement) {
+      dispatch(changeSort(e.target.value as SortEnum));
+    }
   };
 
-  const onBrandChange = (e) => {
-    if (e.target.checked) {
-      setFilters({ ...filters, brands: [...filters.brands, e.target.name] });
-    } else {
-      setFilters({ ...filters, brands: filters.brands.filter((item) => item !== e.target.name) });
+  const onBrandChange = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+    if (e.target instanceof HTMLInputElement) {
+      dispatch(addBrand(e.target.value as Brands));
     }
   };
 
   const onOnlySaleChange = () => {
-    setFilters({ ...filters, onlySale: !filters.onlySale });
-  };
-
-  const onFiltersSubmit = (e) => {
-    e.preventDefault();
-    const { brands, onlySale, sort } = filters;
-    if (brands.length === 0 && !onlySale && sort === 'default') {
-      setSneakersFilters({});
-    } else setSneakersFilters(filters);
+    dispatch(changeSale(!sale));
   };
 
   const onFiltersRemove = () => {
-    setFilters({
-      brands: [],
-      onlySale: false,
-      sort: 'default',
-    });
-    setSneakersFilters({});
+    dispatch(resetFilters());
   };
 
   return (
@@ -51,9 +44,9 @@ const Filters = () => {
         <div className="filters__sort">
           <span>Сортировка</span>
           <select name="sort" onChange={(e) => onSortChange(e)}>
-            <option value="default">По умолчанию</option>
-            <option value="ascending">По возрастанию цены</option>
-            <option value="descending">По убыванию цены</option>
+            <option value={SortEnum.DEFAULT}>По умолчанию</option>
+            <option value={SortEnum.ASC}>По возрастанию цены</option>
+            <option value={SortEnum.DESC}>По убыванию цены</option>
           </select>
         </div>
         <div className="filters__brands">
@@ -85,7 +78,6 @@ const Filters = () => {
           <b>Со скидкой</b>
           <input type="checkbox" onClick={onOnlySaleChange} />
         </label>
-        <Btn onClick={(e) => onFiltersSubmit(e)}>Применить</Btn>
         <Btn onClick={onFiltersRemove} btnType="gray" type="reset">
           Сбросить
         </Btn>

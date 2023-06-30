@@ -1,18 +1,17 @@
-import { useContext } from 'react';
 import SneakersItem from '../components/SneakersItem';
-import AppContext from '../components/Context';
 import EmptyFavorites from '../components/EmptyFavorites';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 
 const Favorites = () => {
-  const { favoriteSneakers } = useContext(AppContext);
+  const { favSneakers } = useTypedSelector((state) => state.favorites);
   return (
     <div className="sneakers">
-      {favoriteSneakers.length !== 0 ? (
+      {favSneakers && favSneakers.length !== 0 ? (
         <>
           <h1>Избранные кроссовки</h1>
           <div className="sneakers__list">
-            {favoriteSneakers.map((item) => (
-              <SneakersItem key={item.id} {...item} />
+            {favSneakers.map((item) => (
+              <SneakersItem key={item.id} sneaker={item} />
             ))}
           </div>
         </>

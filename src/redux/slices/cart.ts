@@ -2,44 +2,78 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { ISneaker } from '../../models/interfaces/sneaker';
 
 interface ICartState {
-  sneakers: ISneaker[] | null;
+  cartSneakers: ISneaker[] | null;
   sale: number;
   finalPrice: number;
+  open: boolean;
 }
 
-const initialState: ICartState = {
-  sneakers: null,
+const defaultValues: ICartState = {
+  cartSneakers: null,
   finalPrice: 0,
   sale: 0,
+  open: false,
 };
+
+const initialState: ICartState = Object.assign(defaultValues);
 
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
     addToCart(state, action: PayloadAction<ISneaker>) {
-      if (!state.sneakers?.includes(action.payload)) {
-        state.sneakers?.push(action.payload);
-      } else if (!state.sneakers) {
-        state.sneakers = [action.payload];
-      } else if (state.sneakers.includes(action.payload)) {
-        state.sneakers = state.sneakers.filter((sneaker) => sneaker.id !== action.payload.id);
+      if (state.cartSneakers && !state.cartSneakers?.includes(action.payload)) {
+        state.cartSneakers?.push(action.payload);
+        if (action.payload.sale) {
+          state.finalPrice += Math.floor(action.payload.sale * action.payload.price);
+        } else {
+          state.finalPrice += action.payload.price;
+        }
+      } else if (!state.cartSneakers) {
+        state.cartSneakers = [action.payload];
+        if (action.payload.sale) {
+          state.finalPrice += Math.floor(action.payload.sale * action.payload.price);
+        } else {
+          state.finalPrice += action.payload.price;
+        }
+      } else if (state.cartSneakers.includes(action.payload)) {
+        state.cartSneakers = state.cartSneakers.filter(
+          (sneaker) => sneaker.id !== action.payload.id,
+        );
       }
     },
     removeFromCart(state, action: PayloadAction<ISneaker>) {
-      if (state.sneakers && state.sneakers.length > 1) {
-        state.sneakers = state.sneakers?.filter((sneaker) => sneaker.id !== action.payload.id);
-      } else if (state.sneakers && state.sneakers.length <= 1) {
-        state.sneakers = null;
+      if (state.cartSneakers && state.cartSneakers.length > 1) {
+        state.cartSneakers = state.cartSneakers?.filter(
+          (sneaker) => sneaker.id !== action.payload.id,
+        );
+      } else if (state.cartSneakers && state.cartSneakers.length <= 1) {
+        state.cartSneakers = null;
+      }
+
+      if (action.payload.sale) {
+        state.finalPrice -= Math.floor(action.payload.price * action.payload.sale);
+      } else {
+        state.finalPrice -= action.payload.price;
       }
     },
     setCart(state, action: PayloadAction<ISneaker[]>) {
-      state.sneakers = action.payload;
+      state.cartSneakers = action.payload;
+    },
+    closeCart(state) {
+      state.open = false;
+    },
+    openCart(state) {
+      state.open = true;
+    },
+    resetCart(state) {
+      state = defaultValues;
     },
   },
 });
 
-export const { addToCart, removeFromCart, setCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, setCart, closeCart, openCart, resetCart } =
+  cartSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 

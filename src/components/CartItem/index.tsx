@@ -1,28 +1,30 @@
-import React, { useContext } from 'react';
-import AppContext from '../Context';
+import React from 'react';
 import deleteIconPath from './delete.svg';
 import { ISneaker } from '../../models/interfaces/sneaker';
+import { AppDispatch } from '../../redux/store';
+import { useDispatch } from 'react-redux';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
+import { priceMoreThan10 } from '../App';
+import { removeFromCart } from '../../redux/slices/cart';
 
 type CartItemProps = {
   sneaker: ISneaker;
 };
 
 const CartItem: React.FC<CartItemProps> = ({ sneaker }) => {
-  const { deleteFromCart, priceMoreThan10 } = useContext(AppContext);
-  const { img, price, title, sale } = sneaker;
+  const dispatch: AppDispatch = useDispatch();
+
+  // const { deleteFromCart, priceMoreThan10 } = useContext(AppContext);
+  const { imgUrl, price, title, sale } = sneaker;
 
   const onClickDelete = () => {
-    if (deleteFromCart) {
-      deleteFromCart(sneaker);
-    }
+    dispatch(removeFromCart(sneaker));
   };
-
-  console.log(sneaker);
 
   const finalPrice = () => {
     if (priceMoreThan10) {
       if (sale) {
-        return priceMoreThan10(price - price * sale);
+        return priceMoreThan10(Math.floor(price * sale));
       } else {
         return priceMoreThan10(price);
       }
@@ -31,7 +33,7 @@ const CartItem: React.FC<CartItemProps> = ({ sneaker }) => {
 
   return (
     <div className="cart__item">
-      <img src={img} alt={title} className="cart__item-image" />
+      <img src={imgUrl} alt={title} className="cart__item-image" />
       <div className="cart__item-content">
         <p>{title}</p>
         <div className="cart__item-content-price">

@@ -2,20 +2,28 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { ISneaker } from '../../models/interfaces/sneaker';
 import { Brands } from '../../models/types/brands';
 
-type Sort = 'asc' | 'desc' | 'default';
+// export type Sort = 'asc' | 'desc' | 'default';
+
+export enum SortEnum {
+  ASC = 'asc',
+  DESC = 'desc',
+  DEFAULT = 'default',
+}
 
 interface IFiltersState {
-  sneakers: ISneaker[] | null;
+  filteredSneakers: ISneaker[] | null;
   brands: Brands[] | null;
-  sort: Sort;
+  sort: SortEnum;
   sale: boolean;
+  search: string;
 }
 
 const defaultState: IFiltersState = {
-  sneakers: null,
+  filteredSneakers: null,
   brands: null,
-  sort: 'default',
+  sort: SortEnum.DEFAULT,
   sale: false,
+  search: '',
 };
 
 const initialState: IFiltersState = Object.assign(defaultState);
@@ -24,6 +32,16 @@ const filtersSlice = createSlice({
   name: 'filters',
   initialState,
   reducers: {
+    setFilteredSneakers(state, action: PayloadAction<ISneaker[]>) {
+      state.filteredSneakers = action.payload;
+    },
+    changeBrands(state, action: PayloadAction<Brands[]>) {
+      if (action.payload.length) {
+        state.brands = action.payload;
+      } else {
+        state.brands = null;
+      }
+    },
     addBrand(state, action: PayloadAction<Brands>) {
       if (state.brands) {
         if (state.brands.includes(action.payload)) {
@@ -39,11 +57,14 @@ const filtersSlice = createSlice({
         state.brands = [action.payload];
       }
     },
-    changeSort(state, action: PayloadAction<Sort>) {
+    changeSort(state, action: PayloadAction<SortEnum>) {
       state.sort = action.payload;
     },
     changeSale(state, action: PayloadAction<boolean>) {
       state.sale = action.payload;
+    },
+    changeSearch(state, action: PayloadAction<string>) {
+      state.search = action.payload;
     },
     resetFilters(state, action: PayloadAction<IFiltersState>) {
       state = action.payload;
@@ -51,6 +72,14 @@ const filtersSlice = createSlice({
   },
 });
 
-export const { addBrand, changeSale, changeSort } = filtersSlice.actions;
+export const {
+  addBrand,
+  changeSale,
+  changeSort,
+  setFilteredSneakers,
+  changeSearch,
+  resetFilters,
+  changeBrands,
+} = filtersSlice.actions;
 
 export default filtersSlice.reducer;

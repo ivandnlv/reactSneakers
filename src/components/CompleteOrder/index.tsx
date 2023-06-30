@@ -1,13 +1,19 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import complete from './complete.png';
 import Btn from '../../UI/Btn';
-import AppContext from '../Context';
+import { AppDispatch } from '../../redux/store';
+import { useDispatch } from 'react-redux';
+import { closeCart } from '../../redux/slices/cart';
 
 const CompleteOrder = ({ setOrderComplete }) => {
-  const { closeCart } = useContext(AppContext);
+  const dispatch: AppDispatch = useDispatch();
+
+  const onCloseCart = () => {
+    dispatch(closeCart());
+  };
 
   const onCompleteBack = () => {
-    closeCart();
+    onCloseCart();
     setOrderComplete(false);
   };
 

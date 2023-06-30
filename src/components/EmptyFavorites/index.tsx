@@ -1,11 +1,17 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import sadSmile from './smile.png';
 import Btn from '../../UI/Btn';
-import AppContext from '../Context';
+import { AppDispatch } from '../../redux/store';
+import { useDispatch } from 'react-redux';
+import { Pages, setPage } from '../../redux/slices/sneakers';
 
 const EmptyFavorites = () => {
-  const { setCurrentPage } = useContext(AppContext);
+  const dispatch: AppDispatch = useDispatch();
+
+  const setCurrentPage = (page: Pages) => {
+    dispatch(setPage(page));
+  };
 
   return (
     <div className="emptyfavorites">
