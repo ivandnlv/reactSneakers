@@ -2,8 +2,9 @@ import { useEffect } from 'react';
 import SneakersItem from '../components/SneakersItem';
 import Search from '../UI/Search/Search';
 import SneakersSkeleton from '../components/SneakersSkeleton';
-// import AppContext from '../components/Context';
-import Slider from '../components/Slider';
+import slide1 from '../UI/Slider/slide1.jpg';
+import slide2 from '../UI/Slider/slide2.jpg';
+import Slider from '../UI/Slider';
 import Filters from '../components/Filters';
 import Pagination from '../components/Pagination';
 import { useTypedSelector } from '../hooks/useTypedSelector';
@@ -12,7 +13,6 @@ import { useDispatch } from 'react-redux';
 import { fetchSneakers, setPage } from '../redux/slices/sneakers';
 
 const Main: React.FC = () => {
-  // const { sneakers, isAlreadyInCart, sneakersFilters, searchValue } = useContext(AppContext);
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
@@ -25,7 +25,10 @@ const Main: React.FC = () => {
 
   return (
     <>
-      <Slider />
+      <Slider>
+        <img src={slide1} alt="slide1" />
+        <img src={slide2} alt="slide2" />
+      </Slider>
       <div className="sneakers">
         <div className="sneakers__top">
           {search ? <h1>Поиск по запросу: {search}</h1> : <h1>Все кроссовки</h1>}
