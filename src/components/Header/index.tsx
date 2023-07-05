@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import logo from './logo.png';
+import cartIcon from './cart.svg';
 import { priceMoreThan10 } from '../App';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { AppDispatch } from '../../redux/store';
@@ -8,7 +9,6 @@ import { Pages, setPage } from '../../redux/slices/sneakers';
 import { openCart } from '../../redux/slices/cart';
 
 const Header = () => {
-  // const {  currentPage, setCurrentPage } = useContext(AppContext);
   const dispatch: AppDispatch = useDispatch();
 
   const { finalPrice } = useTypedSelector((state) => state.cart);
@@ -62,7 +62,7 @@ const Header = () => {
       </nav>
       <div className="header__cart" onClick={onOpenCart}>
         <b>{priceMoreThan10(finalPrice)} руб.</b>
-        <img src="./img/cart.svg" alt="cart" />
+        <img src={cartIcon} alt="cart" />
       </div>
     </header>
   );

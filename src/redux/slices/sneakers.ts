@@ -1,28 +1,35 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { ISneaker } from '../../models/interfaces/sneaker';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { db } from '../../firebase';
-import { doc, getDoc } from 'firebase/firestore/lite';
+import { getSneakers } from '../../service/GetSneakers';
+import { AppDispatch, RootState } from '../store';
+import { setLastSneakerId } from './pagination';
 
-export const fetchSneakers = createAsyncThunk('sneakers/fetchSneakers', async () => {
-  try {
-    const collectionId = '1';
-    const documentId = 'lskFaQfTOf9kHr5q7Ncy';
-    const docRef = doc(db, collectionId, documentId);
-    const docSnapshot = await getDoc(docRef);
-    if (docSnapshot.exists()) {
-      const data = docSnapshot.data();
-      const sneakersArray = data.Sneakers;
-      return sneakersArray as ISneaker[];
-    } else {
-      console.log('Документ не найден');
-      return [];
+interface IFetchSneakersOptions {
+  startId?: number;
+}
+
+export const fetchSneakers = createAsyncThunk(
+  'sneakers/fetchSneakers',
+  async ({ startId = 1 }: IFetchSneakersOptions, { getState, dispatch }) => {
+    try {
+      const { pagination }: RootState = getState() as RootState;
+      const sneakers: ISneaker[] | null = await getSneakers({
+        limitNum: pagination.sneakersPerPage,
+        startId,
+      });
+
+      if (sneakers) {
+        dispatch(setLastSneakerId(sneakers[sneakers.length - 1].id));
+      }
+
+      return sneakers;
+    } catch (error) {
+      console.log('Произошла ошибка: ', error);
+      return null;
     }
-  } catch (error) {
-    console.log('Ошибка получения документа:', error);
-    throw error;
-  }
-});
+  },
+);
 
 export type Pages = 'main' | 'favorites' | 'orders';
 
@@ -62,10 +69,10 @@ const sneakersSlice = createSlice({
       state.errors?.push(action.error);
       state.sneakers = null;
     });
-    builder.addCase(fetchSneakers.fulfilled, (state, action) => {
+    builder.addCase(fetchSneakers.fulfilled, (state, action: PayloadAction<ISneaker[] | null>) => {
       state.loading = false;
       state.errors = null;
-      state.sneakers = action.payload as ISneaker[];
+      state.sneakers = action.payload;
     });
   },
 });

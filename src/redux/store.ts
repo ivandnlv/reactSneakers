@@ -4,6 +4,7 @@ import ordersReducer from './slices/orders';
 import favsReducer from './slices/favorites';
 import sneakersReducer from './slices/sneakers';
 import filtersReducer from './slices/filters';
+import paginationReducer from './slices/pagination';
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     favorites: favsReducer,
     sneakers: sneakersReducer,
     filters: filtersReducer,
+    pagination: paginationReducer,
   },
 });
 

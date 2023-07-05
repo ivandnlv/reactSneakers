@@ -1,29 +1,32 @@
-import React from 'react';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
+import { setCurrentPage } from '../../redux/slices/pagination';
+import { AppDispatch } from '../../redux/store';
+import { useDispatch } from 'react-redux';
 
 const Pagination = () => {
-  // // const { sneakersLength, sneakersShowCount, setCurrentPageNumber, currentPageNumber } =
-  // //   useContext(AppContext);
-  // const pages = [];
+  const dispatch: AppDispatch = useDispatch();
 
-  // for (let i = 1; i <= Math.ceil(sneakersLength / sneakersShowCount); i++) {
-  //   pages.push(i);
-  // }
+  const { currentPage, pages } = useTypedSelector((state) => state.pagination);
 
-  // const onPageClick = (e) => {
-  //   const number = +e.target.textContent;
-  //   setCurrentPageNumber(number);
-  // };
+  const onPageClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (e.target instanceof HTMLDivElement && e.target.textContent) {
+      const number = +e.target.textContent;
+      dispatch(setCurrentPage(number));
+    }
+  };
+
+  if (!pages || pages.length <= 1) return null;
 
   return (
     <div className="pagination">
-      {/* {pages.map((number) => (
+      {pages.map((number) => (
         <div
-          className={number === currentPageNumber ? 'pagination__item current' : 'pagination__item'}
+          className={number === currentPage ? 'pagination__item current' : 'pagination__item'}
           key={number}
           onClick={(e) => onPageClick(e)}>
           {number}
         </div>
-      ))} */}
+      ))}
     </div>
   );
 };
