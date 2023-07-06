@@ -2,26 +2,27 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { ISneaker } from '../../models/interfaces/sneaker';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { getSneakers } from '../../service/GetSneakers';
-import { AppDispatch, RootState } from '../store';
-import { setLastSneakerId } from './pagination';
+import { RootState } from '../store';
+import { IFiltersState, filtersDefaultState } from './filters';
 
 interface IFetchSneakersOptions {
   startId?: number;
+  filters?: IFiltersState['filters'];
 }
 
 export const fetchSneakers = createAsyncThunk(
   'sneakers/fetchSneakers',
-  async ({ startId = 1 }: IFetchSneakersOptions, { getState, dispatch }) => {
+  async (
+    { startId = 1, filters = filtersDefaultState['filters'] }: IFetchSneakersOptions,
+    { getState },
+  ) => {
     try {
       const { pagination }: RootState = getState() as RootState;
       const sneakers: ISneaker[] | null = await getSneakers({
         limitNum: pagination.sneakersPerPage,
         startId,
+        filters,
       });
-
-      if (sneakers) {
-        dispatch(setLastSneakerId(sneakers[sneakers.length - 1].id));
-      }
 
       return sneakers;
     } catch (error) {

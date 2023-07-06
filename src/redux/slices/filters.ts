@@ -2,29 +2,37 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { ISneaker } from '../../models/interfaces/sneaker';
 import { Brands } from '../../models/types/brands';
 
-export enum SortEnum {
-  ASC = 'asc',
-  DESC = 'desc',
-  DEFAULT = 'default',
-}
+export type SortBy = 'asc' | 'desc';
+export type SortField = 'id' | 'price';
 
-interface IFiltersState {
+export interface IFiltersState {
   filteredSneakers: ISneaker[] | null;
-  brands: Brands[] | null;
-  sort: SortEnum;
-  sale: boolean;
-  search: string;
+  filters: {
+    brands: Brands[];
+    sortBy: SortBy;
+    sortField: SortField;
+    sale: boolean;
+    search: string;
+  };
 }
 
-export const defaultState: IFiltersState = {
+interface IChangeSortPayload {
+  sortBy: SortBy;
+  sortField: SortField;
+}
+
+export const filtersDefaultState: IFiltersState = {
   filteredSneakers: null,
-  brands: null,
-  sort: SortEnum.DEFAULT,
-  sale: false,
-  search: '',
+  filters: {
+    brands: [],
+    sortBy: 'asc',
+    sortField: 'id',
+    sale: false,
+    search: '',
+  },
 };
 
-const initialState: IFiltersState = Object.assign(defaultState);
+const initialState: IFiltersState = Object.assign(filtersDefaultState);
 
 const filtersSlice = createSlice({
   name: 'filters',
@@ -35,37 +43,39 @@ const filtersSlice = createSlice({
     },
     changeBrands(state, action: PayloadAction<Brands[]>) {
       if (action.payload.length) {
-        state.brands = action.payload;
+        state.filters.brands = action.payload;
       } else {
-        state.brands = null;
+        state.filters.brands = [];
       }
     },
     addBrand(state, action: PayloadAction<Brands>) {
-      if (state.brands) {
-        if (state.brands.includes(action.payload)) {
-          if (state.brands.length) {
-            state.brands = state.brands.filter((brand) => brand !== action.payload);
+      if (state.filters.brands) {
+        if (state.filters.brands.includes(action.payload)) {
+          if (state.filters.brands.length) {
+            state.filters.brands = state.filters.brands.filter((brand) => brand !== action.payload);
           } else {
-            state.brands = null;
+            state.filters.brands = [];
           }
         } else {
-          state.brands.push(action.payload);
+          state.filters.brands.push(action.payload);
         }
       } else {
-        state.brands = [action.payload];
+        state.filters.brands = [action.payload];
       }
     },
-    changeSort(state, action: PayloadAction<SortEnum>) {
-      state.sort = action.payload;
+    changeSort(state, action: PayloadAction<IChangeSortPayload>) {
+      const { sortBy, sortField } = action.payload;
+      state.filters.sortBy = sortBy;
+      state.filters.sortField = sortField;
     },
     changeSale(state, action: PayloadAction<boolean>) {
-      state.sale = action.payload;
+      state.filters.sale = action.payload;
     },
     changeSearch(state, action: PayloadAction<string>) {
-      state.search = action.payload;
+      state.filters.search = action.payload;
     },
     resetFilters(state) {
-      state = defaultState;
+      state = filtersDefaultState;
     },
   },
 });

@@ -1,47 +1,37 @@
-import { ChangeEvent, useEffect } from 'react';
+import { ChangeEvent } from 'react';
 import Btn from '../../UI/Btn';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
-import {
-  SortEnum,
-  addBrand,
-  changeSale,
-  changeSort,
-  resetFilters,
-  setFilteredSneakers,
-} from '../../redux/slices/filters';
+import { addBrand, changeSale, changeSort, resetFilters } from '../../redux/slices/filters';
 import { AppDispatch } from '../../redux/store';
 import { useDispatch } from 'react-redux';
 import { Brands } from '../../models/types/brands';
-import { defaultState } from '../../redux/slices/filters';
 
 const Filters = () => {
   const dispatch: AppDispatch = useDispatch();
 
-  const { sale, brands, search, sort } = useTypedSelector((state) => state.filters);
-  const { sneakers } = useTypedSelector((state) => state.sneakers);
+  const { filters } = useTypedSelector((state) => state.filters);
 
-  useEffect(() => {
-    if (
-      sale !== defaultState.sale ||
-      brands !== defaultState.brands ||
-      search !== defaultState.search ||
-      sort !== defaultState.sort
-    ) {
-      if (sneakers) {
-        dispatch(setFilteredSneakers(sneakers));
-      }
-    }
-  }, [sale, brands, search, sort]);
+  const { sale } = filters;
 
   const onSortChange = (e: ChangeEvent) => {
     if (e.target instanceof HTMLSelectElement) {
-      dispatch(changeSort(e.target.value as SortEnum));
+      switch (e.target.value) {
+        case 'asc':
+          dispatch(changeSort({ sortBy: 'asc', sortField: 'price' }));
+          break;
+        case 'desc':
+          dispatch(changeSort({ sortBy: 'desc', sortField: 'price' }));
+          break;
+        default:
+          dispatch(changeSort({ sortBy: 'asc', sortField: 'id' }));
+          break;
+      }
     }
   };
 
   const onBrandChange = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
     if (e.target instanceof HTMLInputElement) {
-      dispatch(addBrand(e.target.value as Brands));
+      dispatch(addBrand(e.target.name.toLowerCase() as Brands));
     }
   };
 
@@ -60,9 +50,9 @@ const Filters = () => {
         <div className="filters__sort">
           <span>Сортировка</span>
           <select name="sort" onChange={(e) => onSortChange(e)}>
-            <option value={SortEnum.DEFAULT}>По умолчанию</option>
-            <option value={SortEnum.ASC}>По возрастанию цены</option>
-            <option value={SortEnum.DESC}>По убыванию цены</option>
+            <option value="default">По умолчанию</option>
+            <option value="asc">По возрастанию цены</option>
+            <option value="desc">По убыванию цены</option>
           </select>
         </div>
         <div className="filters__brands">

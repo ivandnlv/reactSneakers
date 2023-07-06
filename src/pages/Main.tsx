@@ -10,34 +10,27 @@ import Pagination from '../components/Pagination';
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import { AppDispatch } from '../redux/store';
 import { useDispatch } from 'react-redux';
-import { fetchSneakersCount, setLastSneakerId } from '../redux/slices/pagination';
+import { fetchSneakersCount } from '../redux/slices/pagination';
 import { fetchSneakers, setPage } from '../redux/slices/sneakers';
 
 const Main: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
 
-  const { lastSneakerId, currentPage, totalSneakersCount } = useTypedSelector(
-    (state) => state.pagination,
-  );
+  const { currentPage, totalSneakersCount } = useTypedSelector((state) => state.pagination);
 
   useEffect(() => {
     dispatch(setPage('main'));
     dispatch(fetchSneakersCount());
-    dispatch(fetchSneakers({ startId: lastSneakerId }));
+    dispatch(fetchSneakers({ startId: 1 }));
   }, [dispatch]);
 
-  useEffect(() => {
-    if (lastSneakerId == totalSneakersCount) {
-      dispatch(setLastSneakerId(1));
-    }
-  }, [lastSneakerId]);
-
-  useEffect(() => {
-    dispatch(fetchSneakers({ startId: lastSneakerId }));
-  }, [currentPage]);
-
   const { sneakers, loading } = useTypedSelector((state) => state.sneakers);
-  const { filteredSneakers, search } = useTypedSelector((state) => state.filters);
+  const { filteredSneakers, filters } = useTypedSelector((state) => state.filters);
+  const { search } = filters;
+
+  useEffect(() => {
+    dispatch(fetchSneakers({ filters }));
+  }, [filters]);
 
   return (
     <>

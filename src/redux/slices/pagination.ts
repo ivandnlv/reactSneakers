@@ -16,7 +16,7 @@ interface IPaginationState {
   sneakersPerPage: number;
   currentPage: number;
   pages: number[] | null;
-  lastSneakerId: number;
+  startSneakerId: number;
 }
 
 const initialState: IPaginationState = {
@@ -24,7 +24,7 @@ const initialState: IPaginationState = {
   sneakersPerPage: 12,
   totalSneakersCount: null,
   pages: null,
-  lastSneakerId: 1,
+  startSneakerId: 1,
 };
 
 const paginationSlice = createSlice({
@@ -36,10 +36,6 @@ const paginationSlice = createSlice({
     },
     setTotalSneakersCount(state, action: PayloadAction<number>) {
       state.totalSneakersCount = action.payload;
-    },
-    setLastSneakerId(state, action: PayloadAction<number>) {
-      state.lastSneakerId = action.payload;
-      console.log('last id: ', state.lastSneakerId);
     },
   },
   extraReducers: (builder) => {
@@ -59,6 +55,6 @@ const paginationSlice = createSlice({
   },
 });
 
-export const { setCurrentPage, setTotalSneakersCount, setLastSneakerId } = paginationSlice.actions;
+export const { setCurrentPage, setTotalSneakersCount } = paginationSlice.actions;
 
 export default paginationSlice.reducer;
