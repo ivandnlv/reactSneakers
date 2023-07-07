@@ -7,15 +7,12 @@ import { IFiltersState, filtersDefaultState } from './filters';
 
 interface IFetchSneakersOptions {
   startId?: number;
-  filters?: IFiltersState['filters'];
+  filters?: IFiltersState;
 }
 
 export const fetchSneakers = createAsyncThunk(
   'sneakers/fetchSneakers',
-  async (
-    { startId = 1, filters = filtersDefaultState['filters'] }: IFetchSneakersOptions,
-    { getState },
-  ) => {
+  async ({ startId = 1, filters = filtersDefaultState }: IFetchSneakersOptions, { getState }) => {
     try {
       const { pagination }: RootState = getState() as RootState;
       const sneakers: ISneaker[] | null = await getSneakers({

@@ -9,7 +9,7 @@ import { Brands } from '../../models/types/brands';
 const Filters = () => {
   const dispatch: AppDispatch = useDispatch();
 
-  const { filters } = useTypedSelector((state) => state.filters);
+  const filters = useTypedSelector((state) => state.filters);
 
   const { sale } = filters;
 

@@ -4,4 +4,5 @@ export interface ISneaker {
   imgUrl: string;
   price: number;
   sale?: number;
+  hasSale: boolean;
 }

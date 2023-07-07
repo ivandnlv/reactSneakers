@@ -2,7 +2,7 @@ import React from 'react';
 
 type BtnProps = {
   children?: string;
-  onClick: () => void;
+  onClick?: () => void;
   btnType?: 'go' | 'back' | 'gray';
   type?: 'button' | 'submit' | 'reset';
 };

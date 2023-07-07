@@ -16,7 +16,9 @@ import { fetchSneakers, setPage } from '../redux/slices/sneakers';
 const Main: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
 
-  const { currentPage, totalSneakersCount } = useTypedSelector((state) => state.pagination);
+  const { currentPage, totalSneakersCount, sneakersPerPage } = useTypedSelector(
+    (state) => state.pagination,
+  );
 
   useEffect(() => {
     dispatch(setPage('main'));
@@ -25,12 +27,12 @@ const Main: React.FC = () => {
   }, [dispatch]);
 
   const { sneakers, loading } = useTypedSelector((state) => state.sneakers);
-  const { filteredSneakers, filters } = useTypedSelector((state) => state.filters);
+  const filters = useTypedSelector((state) => state.filters);
   const { search } = filters;
 
   useEffect(() => {
     dispatch(fetchSneakers({ filters }));
-  }, [filters]);
+  }, [filters, dispatch]);
 
   return (
     <>
@@ -39,27 +41,32 @@ const Main: React.FC = () => {
         <img src={slide2} alt="slide2" />
       </Slider>
       <div className="sneakers">
-        <div className="sneakers__top">
-          {search ? <h1>Поиск по запросу: {search}</h1> : <h1>Все кроссовки</h1>}
-          <Pagination />
-          <Search />
-        </div>
-        <div className="sneakers__wrapper">
-          <div className="sneakers__list">
-            {loading
-              ? [...Array(6)].map((item, index) => <SneakersSkeleton key={index} />)
-              : filteredSneakers
-              ? filteredSneakers.map((sneaker) => (
-                  <SneakersItem key={sneaker.id} sneaker={sneaker} />
-                ))
-              : sneakers
-              ? sneakers.map((sneaker) => <SneakersItem key={sneaker.id} sneaker={sneaker} />)
-              : 'Нет кроссовок'}
+        <div className="sneakers__container">
+          <div className="sneakers__container-left">
+            <div className="sneakers__top">
+              {search ? <h1>Поиск по запросу: {search}</h1> : <h1>Все кроссовки</h1>}
+              <Pagination />
+            </div>
+            <div className="sneakers__wrapper">
+              <div className="sneakers__list">
+                {loading
+                  ? [...Array(sneakersPerPage)].map((item, index) => (
+                      <SneakersSkeleton key={index} />
+                    ))
+                  : sneakers
+                  ? sneakers.map((sneaker) => <SneakersItem key={sneaker.id} sneaker={sneaker} />)
+                  : 'Нет кроссовок'}
+              </div>
+            </div>
           </div>
-          <Filters />
-        </div>
-        <div className="sneakers__pagination">
-          <Pagination />
+          <div className="sneaker__container-right">
+            <Search />
+            <Filters />
+          </div>
+
+          <div className="sneakers__pagination">
+            <Pagination />
+          </div>
         </div>
       </div>
     </>
