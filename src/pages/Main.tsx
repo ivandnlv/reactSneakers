@@ -60,7 +60,7 @@ const Main: React.FC = () => {
             </div>
           </div>
           <div className="sneaker__container-right">
-            <Search />
+            {/* <Search /> */}
             <Filters />
           </div>
 

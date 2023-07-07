@@ -14,14 +14,18 @@ const ordersSlice = createSlice({
   initialState,
   reducers: {
     addToOrders(state, action: PayloadAction<ISneaker>) {
-      if (state.ordersSneakers && !state.ordersSneakers.includes(action.payload)) {
-        state.ordersSneakers.push(action.payload);
-      } else if (state.ordersSneakers && state.ordersSneakers.includes(action.payload)) {
-        state.ordersSneakers = state.ordersSneakers.filter(
-          (sneaker) => sneaker.id !== action.payload.id,
-        );
-      } else if (!state.ordersSneakers) {
-        state.ordersSneakers = [action.payload];
+      const sneaker = action.payload;
+
+      if (state.ordersSneakers) {
+        if (state.ordersSneakers.some((ordersSneaker) => ordersSneaker.id === sneaker.id)) {
+          state.ordersSneakers = state.ordersSneakers.filter(
+            (ordersSneaker) => ordersSneaker.id !== sneaker.id,
+          );
+        } else {
+          state.ordersSneakers.push(sneaker);
+        }
+      } else {
+        state.ordersSneakers = [sneaker];
       }
     },
     removeFromOrders(state, action: PayloadAction<ISneaker>) {
