@@ -7,6 +7,7 @@ import Orders from '../../pages/Orders';
 import { useDispatch } from 'react-redux';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { AppDispatch } from '../../redux/store';
+import { useEffect } from 'react';
 
 export const priceMoreThan10 = (price: number): number | string => {
   if (price > 10000) {
@@ -19,6 +20,12 @@ function App() {
   const dispatch: AppDispatch = useDispatch();
 
   const { open } = useTypedSelector((state) => state.cart);
+
+  useEffect(() => {
+    if (!open) {
+      document.body.style.overflow = '';
+    }
+  }, [open]);
 
   return (
     <div className="wrapper">

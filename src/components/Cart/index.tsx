@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CompleteOrder from '../CompleteOrder';
 import EmptyCart from '../EmptyCart';
 import NotEmptyCart from '../NotEmptyCart';
@@ -14,8 +14,20 @@ const Cart: React.FC = () => {
   const { cartSneakers, open, finalPrice } = useTypedSelector((state) => state.cart);
   const [orderComplete, setOrderComplete] = useState(false);
 
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+    }
+  }, [open]);
+
   const onCloseCart = () => {
     dispatch(closeCart());
+  };
+
+  const onOverlayClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (e.target instanceof HTMLDivElement && e.target.classList.contains('overlay')) {
+      onClickClose();
+    }
   };
 
   // Animations
@@ -31,7 +43,7 @@ const Cart: React.FC = () => {
   };
 
   return (
-    <div className={overlayHidden}>
+    <div className={overlayHidden} onClick={(e) => onOverlayClick(e)}>
       <div className={cartClosed}>
         <div className="cart__top">
           <h1>Корзина</h1>
