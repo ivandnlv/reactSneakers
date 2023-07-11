@@ -3,31 +3,25 @@ import { ISneaker } from '../../models/interfaces/sneaker';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { getSneakers } from '../../service/GetSneakers';
 import { RootState } from '../store';
-import { IFiltersState, filtersDefaultState } from './filters';
 
-interface IFetchSneakersOptions {
-  startId?: number;
-  filters?: IFiltersState;
-}
+export const fetchSneakers = createAsyncThunk('sneakers/fetchSneakers', async (_, { getState }) => {
+  try {
+    const { pagination, filters }: RootState = getState() as RootState;
+    const { currentPage, sneakersPerPage } = pagination;
 
-export const fetchSneakers = createAsyncThunk(
-  'sneakers/fetchSneakers',
-  async ({ startId = 1, filters = filtersDefaultState }: IFetchSneakersOptions, { getState }) => {
-    try {
-      const { pagination }: RootState = getState() as RootState;
-      const sneakers: ISneaker[] | null = await getSneakers({
-        limitNum: pagination.sneakersPerPage,
-        startId,
-        filters,
-      });
+    const sneakers: ISneaker[] | null = await getSneakers({
+      limitNum: pagination.sneakersPerPage,
+      startAfterId: currentPage === 1 ? undefined : (currentPage - 1) * sneakersPerPage,
+      endBeforeId: currentPage === 1 ? undefined : currentPage * sneakersPerPage,
+      filters,
+    });
 
-      return sneakers;
-    } catch (error) {
-      console.log('Произошла ошибка: ', error);
-      return null;
-    }
-  },
-);
+    return sneakers;
+  } catch (error) {
+    console.log('Произошла ошибка: ', error);
+    return null;
+  }
+});
 
 export type Pages = 'main' | 'favorites' | 'orders';
 
