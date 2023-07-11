@@ -22,7 +22,7 @@ const Main: React.FC = () => {
   useEffect(() => {
     dispatch(setPage('main'));
     dispatch(fetchSneakersCount());
-    dispatch(fetchSneakers({ startId: 1 }));
+    dispatch(fetchSneakers());
   }, [dispatch]);
 
   const { sneakers, loading } = useTypedSelector((state) => state.sneakers);
@@ -30,8 +30,8 @@ const Main: React.FC = () => {
   const { search } = filters;
 
   useEffect(() => {
-    dispatch(fetchSneakers({ filters }));
-  }, [filters, dispatch]);
+    dispatch(fetchSneakers());
+  }, [filters, dispatch, currentPage]);
 
   return (
     <>

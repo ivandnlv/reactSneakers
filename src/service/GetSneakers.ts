@@ -11,17 +11,13 @@ import {
   getCount,
   where,
   endAt,
+  startAfter,
+  endBefore,
 } from 'firebase/firestore/lite';
 import { IFiltersState } from '../redux/slices/filters';
 
 const sneakersRef = collection(db, '/sneakers');
 const sliderRef = collection(db, '/slider');
-
-export interface IGetSneakersOptions {
-  startId?: number;
-  limitNum: number;
-  filters: IFiltersState;
-}
 
 export const getSneakersTotalCount = async () => {
   const sneakersTotalQuery = await getCount(sneakersRef);
@@ -29,8 +25,21 @@ export const getSneakersTotalCount = async () => {
   return sneakersTotalQuery.data().count;
 };
 
-export const getSneakers = async ({ limitNum, startId = 1, filters }: IGetSneakersOptions) => {
+export interface IGetSneakersOptions {
+  limitNum: number;
+  filters: IFiltersState;
+  startAfterId?: number;
+  endBeforeId?: number;
+}
+export const getSneakers = async ({
+  limitNum,
+  filters,
+  endBeforeId,
+  startAfterId,
+}: IGetSneakersOptions) => {
   const { brands, sale, sortBy, sortField } = filters;
+
+  const startId = 1;
 
   let sneakersQuery = query(sneakersRef);
 
@@ -42,10 +51,32 @@ export const getSneakers = async ({ limitNum, startId = 1, filters }: IGetSneake
     sneakersQuery = query(sneakersQuery, where('hasSale', '==', true));
   }
 
-  if (sortBy === 'asc') {
-    sneakersQuery = query(sneakersQuery, orderBy(sortField, sortBy), startAt(startId));
-  } else if (sortBy === 'desc') {
-    sneakersQuery = query(sneakersQuery, orderBy(sortField, sortBy), endAt(startId));
+  if (sortBy === 'asc' && sortField !== 'id') {
+    sneakersQuery = query(
+      sneakersQuery,
+      orderBy(sortField, sortBy),
+      orderBy('id'),
+      startAfter(startAfterId ?? startId),
+    );
+  } else if (sortBy === 'desc' && sortField !== 'id') {
+    sneakersQuery = query(
+      sneakersQuery,
+      orderBy(sortField, sortBy),
+      orderBy('id'),
+      endBefore(endBeforeId ?? startId),
+    );
+  } else if (sortBy === 'asc' && sortField === 'id') {
+    sneakersQuery = query(
+      sneakersQuery,
+      orderBy(sortField, sortBy),
+      startAfter(startAfterId ?? startId),
+    );
+  } else if (sortBy === 'desc' && sortField === 'id') {
+    sneakersQuery = query(
+      sneakersQuery,
+      orderBy(sortField, sortBy),
+      endBefore(endBeforeId ?? startId),
+    );
   }
 
   sneakersQuery = query(sneakersQuery, limit(limitNum));
