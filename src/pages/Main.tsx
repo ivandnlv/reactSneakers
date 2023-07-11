@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import SneakersItem from '../components/SneakersItem';
-import Search from '../UI/Search/Search';
 import SneakersSkeleton from '../components/SneakersSkeleton';
 import slide1 from '../UI/Slider/slide1.jpg';
 import slide2 from '../UI/Slider/slide2.jpg';
