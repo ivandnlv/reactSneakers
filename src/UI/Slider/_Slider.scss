@@ -1,0 +1,49 @@
+.slider {
+  position: relative;
+  &__wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    width: 1000px;
+    margin: 0 auto;
+    @media (max-width: 1200px) {
+      width: 760px;
+    }
+  }
+  &__track {
+    display: flex;
+    width: max-content;
+    transition: 0.5s transform ease-in-out;
+    &-item {
+      width: 1000px;
+      @media (max-width: 1200px) {
+        width: 760px;
+      }
+      img {
+        width: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+  &__btns {
+    .next,
+    .prev {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: 0.2s opacity ease-in-out;
+      cursor: pointer;
+      z-index: 10;
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+    .next {
+      right: -20px;
+    }
+    .prev {
+      left: -20px;
+      transform: scale(-1, 1) translateY(-50%);
+    }
+  }
+}

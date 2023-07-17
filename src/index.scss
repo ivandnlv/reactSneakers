@@ -1,28 +1,32 @@
-$main-color: #89CB34;
-$red: #FF8585;
+$main-color: #89cb34;
+$red: #ff8585;
+$border: 2px solid #f3f3f3;
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', system-ui;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', system-ui;
 }
 
-h1,h2,h3 {
-    font-weight: 700;
+h1,
+h2,
+h3 {
+  font-weight: 700;
 }
 
 body {
-    position: relative;
-    background: $main-color;
-    height: 100%;
+  position: relative;
+  background: #fff;
+  height: 100%;
 }
 
 @import './UI/Search/Search';
 @import './UI/Btn/Btn';
-@import "./components/App/App";
+@import './UI/Slider/Slider';
+@import './UI/Input/Input';
+@import './components/App/App';
 @import './components/Header/Header';
-@import './components/Slider/Slider';
 @import './pages/Pages';
 @import './components/Cart/Cart';
 @import './components/CartItem/CartItem';

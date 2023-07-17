@@ -1,0 +1,33 @@
+.input {
+  position: relative;
+  font-size: 16px;
+  font-weight: 600;
+  &__title {
+    position: absolute;
+    left: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: 0.2s color ease-in-out;
+    transition: 0.2s transform ease-in-out;
+    z-index: 0;
+    &._active {
+      color: $main-color;
+      background: #fff;
+      transform: translateY(-35px);
+      left: 22px;
+      padding: 0 3px;
+    }
+  }
+  input {
+    z-index: 1;
+    display: block;
+    padding: 15px 25px;
+    border: $border;
+    border-radius: 10px;
+    transition: 0.2s border ease-in-out;
+    &:focus {
+      outline: none;
+      border-color: $main-color;
+    }
+  }
+}

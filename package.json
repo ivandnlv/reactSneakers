@@ -4,17 +4,20 @@
   "private": true,
   "homepage": "https://ivandnlv.github.io/reactSneakers",
   "dependencies": {
+    "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.27.2",
+    "firebase": "^9.23.0",
     "gh-pages": "^4.0.0",
-    "node-sass": "^4.14.1",
     "react": "^18.1.0",
     "react-content-loader": "^6.2.0",
     "react-dom": "^18.1.0",
+    "react-redux": "^8.1.1",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
+    "sass": "^1.63.6",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -42,5 +45,15 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "devDependencies": {
+    "@types/node": "^20.3.1",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6",
+    "typescript": "^4.9.5"
+  },
+  "description": "Стэк: \r + React;\r + React Hooks (useState, useEffect, useContext);\r + React router V6;\r + Axios;\r + LocalStorage.",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC"
 }
