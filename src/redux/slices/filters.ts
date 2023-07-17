@@ -31,6 +31,9 @@ const filtersSlice = createSlice({
   name: 'filters',
   initialState,
   reducers: {
+    setFilters(state, action: PayloadAction<IFiltersState>) {
+      state = action.payload;
+    },
     changeBrands(state, action: PayloadAction<Brands[]>) {
       if (action.payload.length) {
         state.brands = action.payload;
@@ -74,7 +77,14 @@ const filtersSlice = createSlice({
   },
 });
 
-export const { addBrand, changeSale, changeSort, changeSearch, resetFilters, changeBrands } =
-  filtersSlice.actions;
+export const {
+  addBrand,
+  changeSale,
+  changeSort,
+  changeSearch,
+  resetFilters,
+  changeBrands,
+  setFilters,
+} = filtersSlice.actions;
 
 export default filtersSlice.reducer;

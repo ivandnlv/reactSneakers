@@ -66,6 +66,13 @@ const cartSlice = createSlice({
     },
     setCart(state, action: PayloadAction<ISneaker[] | null>) {
       state.cartSneakers = action.payload;
+      state.cartSneakers?.forEach((cartSneaker) => {
+        if (cartSneaker.sale) {
+          state.finalPrice += Math.floor(cartSneaker.price * cartSneaker.sale);
+        } else {
+          state.finalPrice += cartSneaker.price;
+        }
+      });
     },
     closeCart(state) {
       state.open = false;

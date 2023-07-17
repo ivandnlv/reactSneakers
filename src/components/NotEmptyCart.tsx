@@ -6,7 +6,7 @@ import { priceMoreThan10 } from './App';
 import { AppDispatch } from '../redux/store';
 import { useDispatch } from 'react-redux';
 import { resetCart } from '../redux/slices/cart';
-import { setOrders } from '../redux/slices/orders';
+import { addToOrders } from '../redux/slices/orders';
 
 type NotEmptyCartProps = {
   setOrderComplete: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,7 +19,9 @@ const NotEmptyCart: React.FC<NotEmptyCartProps> = ({ setOrderComplete }) => {
 
   const onAddToOrders = () => {
     if (cartSneakers) {
-      dispatch(setOrders(cartSneakers));
+      cartSneakers.forEach((cartSneaker) => {
+        dispatch(addToOrders(cartSneaker));
+      });
     }
     dispatch(resetCart());
   };

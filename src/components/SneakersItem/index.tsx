@@ -10,13 +10,19 @@ import { addToCart } from '../../redux/slices/cart';
 import { addToFavs } from '../../redux/slices/favorites';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { priceMoreThan10 } from '../App';
+import { IOrderSneaker } from '../../redux/slices/orders';
 
-type SneakersItemProps = {
-  sneaker: ISneaker;
+interface ISneakersItemProps {
+  sneaker: ISneaker | IOrderSneaker;
   isOrders?: boolean;
-};
+  type?: 'default' | 'orders';
+}
 
-const SneakersItem: React.FC<SneakersItemProps> = ({ sneaker, isOrders = false }) => {
+function isOrderSneaker(sneaker: ISneaker | IOrderSneaker): sneaker is IOrderSneaker {
+  return (sneaker as IOrderSneaker).count !== undefined;
+}
+
+const SneakersItem = ({ sneaker, isOrders = false, type = 'default' }: ISneakersItemProps) => {
   useEffect(() => {
     setIsInCart(isAlreadyInCart());
     setIsInFavs(isAlreadyInFav());
@@ -31,6 +37,20 @@ const SneakersItem: React.FC<SneakersItemProps> = ({ sneaker, isOrders = false }
   const [isInFavs, setIsInFavs] = useState(false);
 
   const salePrice = sneaker.sale ? Math.floor(sneaker.price * sneaker.sale) : null;
+
+  useEffect(() => {
+    if (cartSneakers?.some((cartSneaker) => cartSneaker.id === sneaker.id)) {
+      setIsInCart(true);
+    } else {
+      setIsInCart(false);
+    }
+
+    if (favSneakers?.some((favSneaker) => favSneaker.id === sneaker.id)) {
+      setIsInFavs(true);
+    } else {
+      setIsInFavs(false);
+    }
+  }, [cartSneakers, favSneakers]);
 
   const onClickPlus = () => {
     setIsInCart(!isInCart);
@@ -54,6 +74,25 @@ const SneakersItem: React.FC<SneakersItemProps> = ({ sneaker, isOrders = false }
     }
     return false;
   };
+
+  if (type === 'orders' && isOrderSneaker(sneaker)) {
+    return (
+      <div className="sneakers__list-item true">
+        <img
+          src={sneaker.imgUrl}
+          alt={'sneaker' + sneaker.id}
+          className="sneakers__list-item-img"
+        />
+        <p>{sneaker.title}</p>
+        <p style={{ marginTop: 10 }}>Всего куплено пар: {sneaker.count}</p>
+        <span>Куплено по цене: </span>
+        <b>
+          {salePrice ? priceMoreThan10(salePrice) : priceMoreThan10(sneaker.price)}
+          руб.
+        </b>
+      </div>
+    );
+  }
 
   return (
     <div className="sneakers__list-item true">

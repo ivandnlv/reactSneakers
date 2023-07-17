@@ -8,6 +8,10 @@ import { useDispatch } from 'react-redux';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { AppDispatch } from '../../redux/store';
 import { useEffect } from 'react';
+import { LocalStorageItems } from '../../models/types/localStorage';
+import { setOrders } from '../../redux/slices/orders';
+import { setCart } from '../../redux/slices/cart';
+import { setFavs } from '../../redux/slices/favorites';
 
 export const priceMoreThan10 = (price: number): number | string => {
   if (price > 10000) {
@@ -18,6 +22,40 @@ export const priceMoreThan10 = (price: number): number | string => {
 
 function App() {
   const dispatch: AppDispatch = useDispatch();
+
+  const orders = useTypedSelector((state) => state.orders.ordersSneakers);
+  const cart = useTypedSelector((state) => state.cart.cartSneakers);
+  const favs = useTypedSelector((state) => state.favorites.favSneakers);
+
+  useEffect(() => {
+    const localOrders = localStorage.getItem('orders' as LocalStorageItems);
+    const localCart = localStorage.getItem('cart' as LocalStorageItems);
+    const localFavs = localStorage.getItem('favorites' as LocalStorageItems);
+
+    if (localOrders) {
+      dispatch(setOrders(JSON.parse(localOrders)));
+    }
+
+    if (localCart) {
+      dispatch(setCart(JSON.parse(localCart)));
+    }
+
+    if (localFavs) {
+      dispatch(setFavs(JSON.parse(localFavs)));
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    localStorage.setItem('orders' as LocalStorageItems, JSON.stringify(orders));
+  }, [orders]);
+
+  useEffect(() => {
+    localStorage.setItem('cart' as LocalStorageItems, JSON.stringify(cart));
+  }, [cart]);
+
+  useEffect(() => {
+    localStorage.setItem('favorites' as LocalStorageItems, JSON.stringify(favs));
+  }, [favs]);
 
   const { open } = useTypedSelector((state) => state.cart);
 

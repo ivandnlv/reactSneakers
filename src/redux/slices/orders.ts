@@ -1,8 +1,12 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { ISneaker } from '../../models/interfaces/sneaker';
 
+export interface IOrderSneaker extends ISneaker {
+  count: number;
+}
+
 interface IOrdersState {
-  ordersSneakers: ISneaker[] | null;
+  ordersSneakers: IOrderSneaker[] | null;
 }
 
 const initialState: IOrdersState = {
@@ -18,24 +22,27 @@ const ordersSlice = createSlice({
 
       if (state.ordersSneakers) {
         if (state.ordersSneakers.some((ordersSneaker) => ordersSneaker.id === sneaker.id)) {
-          state.ordersSneakers = state.ordersSneakers.filter(
-            (ordersSneaker) => ordersSneaker.id !== sneaker.id,
-          );
+          state.ordersSneakers = state.ordersSneakers.map((ordersSneaker) => {
+            if (ordersSneaker.id === action.payload.id) {
+              ordersSneaker.count += 1;
+            }
+            return ordersSneaker;
+          });
         } else {
-          state.ordersSneakers.push(sneaker);
+          state.ordersSneakers.push({ ...sneaker, count: 1 });
         }
       } else {
-        state.ordersSneakers = [sneaker];
+        state.ordersSneakers = [{ ...sneaker, count: 1 }];
       }
     },
-    removeFromOrders(state, action: PayloadAction<ISneaker>) {
+    removeFromOrders(state, action: PayloadAction<IOrderSneaker>) {
       if (state.ordersSneakers) {
         state.ordersSneakers = state.ordersSneakers.filter(
           (sneaker) => sneaker.id !== action.payload.id,
         );
       }
     },
-    setOrders(state, action: PayloadAction<ISneaker[]>) {
+    setOrders(state, action: PayloadAction<IOrderSneaker[]>) {
       state.ordersSneakers = action.payload;
     },
   },

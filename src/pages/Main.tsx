@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import SneakersItem from '../components/SneakersItem';
 import SneakersSkeleton from '../components/SneakersSkeleton';
 import slide1 from '../UI/Slider/slide1.jpg';
@@ -11,13 +11,13 @@ import { AppDispatch } from '../redux/store';
 import { useDispatch } from 'react-redux';
 import { fetchSneakersCount } from '../redux/slices/pagination';
 import { fetchSneakers, setPage } from '../redux/slices/sneakers';
+import { filtersDefaultState } from '../redux/slices/filters';
 
 const Main: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
+  const [showPagination, setShowPagination] = useState(true);
 
-  const { currentPage, totalSneakersCount, sneakersPerPage } = useTypedSelector(
-    (state) => state.pagination,
-  );
+  const { currentPage, sneakersPerPage } = useTypedSelector((state) => state.pagination);
 
   useEffect(() => {
     dispatch(setPage('main'));
@@ -31,6 +31,18 @@ const Main: React.FC = () => {
 
   useEffect(() => {
     dispatch(fetchSneakers());
+    const { brands, sale, search, sortBy, sortField } = filters;
+    if (
+      brands.length !== filtersDefaultState.brands.length ||
+      sale !== filtersDefaultState.sale ||
+      search !== filtersDefaultState.search ||
+      sortBy !== filtersDefaultState.sortBy ||
+      sortField !== filtersDefaultState.sortField
+    ) {
+      setShowPagination(false);
+    } else {
+      setShowPagination(true);
+    }
   }, [filters, dispatch, currentPage]);
 
   return (
@@ -44,14 +56,12 @@ const Main: React.FC = () => {
           <div className="sneakers__container-left">
             <div className="sneakers__top">
               {search ? <h1>Поиск по запросу: {search}</h1> : <h1>Все кроссовки</h1>}
-              <Pagination />
+              {showPagination && <Pagination />}
             </div>
             <div className="sneakers__wrapper">
               <div className="sneakers__list">
                 {loading
-                  ? [...Array(sneakersPerPage)].map((item, index) => (
-                      <SneakersSkeleton key={index} />
-                    ))
+                  ? [...Array(sneakersPerPage)].map((_, index) => <SneakersSkeleton key={index} />)
                   : sneakers
                   ? sneakers.map((sneaker) => <SneakersItem key={sneaker.id} sneaker={sneaker} />)
                   : 'Нет кроссовок'}
@@ -63,9 +73,7 @@ const Main: React.FC = () => {
             <Filters />
           </div>
 
-          <div className="sneakers__pagination">
-            <Pagination />
-          </div>
+          <div className="sneakers__pagination">{showPagination && <Pagination />}</div>
         </div>
       </div>
     </>

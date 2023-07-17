@@ -21,7 +21,7 @@ interface IPaginationState {
 
 const initialState: IPaginationState = {
   currentPage: 1,
-  sneakersPerPage: 3,
+  sneakersPerPage: 8,
   totalSneakersCount: null,
   pages: null,
   startSneakerId: 1,

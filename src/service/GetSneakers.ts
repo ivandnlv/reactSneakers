@@ -14,7 +14,7 @@ import {
   startAfter,
   endBefore,
 } from 'firebase/firestore/lite';
-import { IFiltersState } from '../redux/slices/filters';
+import { IFiltersState, filtersDefaultState } from '../redux/slices/filters';
 
 const sneakersRef = collection(db, '/sneakers');
 const sliderRef = collection(db, '/slider');
@@ -79,7 +79,12 @@ export const getSneakers = async ({
     );
   }
 
-  sneakersQuery = query(sneakersQuery, limit(limitNum));
+  if (
+    filters.sortBy === filtersDefaultState.sortBy &&
+    filters.sortField === filtersDefaultState.sortField
+  ) {
+    sneakersQuery = query(sneakersQuery, limit(limitNum));
+  }
 
   const docSnapshot = await getDocs(sneakersQuery);
 
