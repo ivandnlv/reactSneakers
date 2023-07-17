@@ -1,10 +1,11 @@
-# Магазин кроссовок на React
+# Прототип магазина кроссовок на React
 Стэк: 
 + React;
-+ React Hooks (useState, useEffect, useContext);
++ React Hooks;
 + React router V6;
-+ Axios;
++ Typescript;
++ Redux toolkit;
++ Google firebase;
 + LocalStorage.
 
-![image](https://user-images.githubusercontent.com/91759945/172437437-427503fd-08d6-43f5-b1de-e06b2cc911f4.png)
-
+<img width="960" alt="image" src="https://github.com/ivandnlv/reactSneakers/assets/91759945/ba9b887b-9333-433b-b447-666d265f8779">
