@@ -1,11 +1,12 @@
 # Прототип магазина кроссовок на React
+
+Прототип интернет-магазина кроссовок на React + TS + Redux toolkit + firebase, изначально проект был написан на react + js + react context + mockapi, спустя год я к нему вернулся и переписал на более актуальный стэк, данный проект - это мой тестовый полигон, в планах написать самому бэкенд для данного проекта и добавить админку, пользователей и т.д.
+
 Стэк: 
 + React;
-+ React Hooks;
-+ React router V6;
 + Typescript;
 + Redux toolkit;
 + Google firebase;
 + LocalStorage.
 
-<img width="960" alt="image" src="https://github.com/ivandnlv/reactSneakers/assets/91759945/ba9b887b-9333-433b-b447-666d265f8779">
+![image](https://github.com/ivandnlv/sneakers4you/assets/91759945/9bbe6f56-6dd6-415c-8d2b-8a6c5407268d)
